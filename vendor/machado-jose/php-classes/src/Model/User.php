@@ -9,6 +9,28 @@ class User extends Model{
 
 	const SESSION = "User";
 
+	public function save()
+	{
+		$sql = new Sql();
+
+		$results = $sql->select("CALL sp_users_save(
+			:pdesperson,
+			:pdeslogin,
+			:pdespassword,
+			:pdesemail,
+			:pnrphone,
+			:pinadmin
+		)", array(
+			":pdesperson"=> $this->getdesperson(),
+			":pdeslogin"=> $this->getdeslogin(),
+			":pdespassword"=> $this->getdespassword(),
+			":pdesemail"=> $this->getdesmail(),
+			":pnrphone"=> $this->getnrphone(),
+			":pinadmin"=> $this->getinadmin()
+		));
+
+	}
+
 	public static function login($deslogin, $despassword)
 	{
 		$sql = new Sql();
@@ -50,6 +72,12 @@ class User extends Model{
 	public static function logout()
 	{
 		unset($_SESSION[User::SESSION]);
+	}
+
+	public static function listAll()
+	{
+		$sql = new Sql();
+		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson ");
 	}
 }
 

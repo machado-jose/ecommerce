@@ -25,13 +25,13 @@ class Model{
 		}
 	}
 
-	protected function setDatas($datas = array()){
+	public function setDatas($datas = array()){
 		foreach ($datas as $key => $value) {
 			$this->{"set".$key}($value);
 		}
 	}
 
-	protected function getValues(){
+	public function getValues(){
 		return $this->values;
 	}
 }
