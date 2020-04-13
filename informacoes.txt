@@ -1,0 +1,15 @@
+** Problemas nas rotas **
+Para ambientes linux/docker
+
+Minha estrutura de url estava respondendo localhost/index.php/admin como estava em um ambiente linux docker/debian eu tive que configurar .htaccess
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php?/$1 [L]
+</IfModule>
+
+e habilitar o modo mod_rewrite
+sudo a2enmod rewrite
+e reiniciar o apache
+Assim respondendo corretamente localhost/admin
