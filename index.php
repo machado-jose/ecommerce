@@ -35,6 +35,39 @@ $app->get('/admin/login', function() {
 	$page->setTpl("login");
 });
 
+$app->get('/admin/forgot', function() {
+    
+	$page = new PageAdmin(array(
+		"header"=> false,
+		"footer"=> false
+	));
+	$page->setTpl("forgot");
+});
+
+$app->post('/admin/forgot', function() {
+    
+	$user = new User();
+	$user->getForgot($_POST['email']);
+	header("Location: /admin/forgot/sent");
+	exit;
+});
+
+$app->get('/admin/forgot/sent', function(){
+	$page = new PageAdmin(array(
+		"header"=> false,
+		"footer"=> false
+	));
+	$page->setTpl("forgot-sent");
+});
+
+$app->get('/admin/forgot/reset', function(){
+	$page = new PageAdmin(array(
+		"header"=> false,
+		"footer"=> false
+	));
+	$page->setTpl("forgot-reset");
+});
+
 $app->post('/admin/login', function(){
 
 	User::login($_POST['deslogin'], $_POST['despassword']);

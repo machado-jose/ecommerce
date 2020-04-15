@@ -13,3 +13,8 @@ e habilitar o modo mod_rewrite
 sudo a2enmod rewrite
 e reiniciar o apache
 Assim respondendo corretamente localhost/admin
+
+
+** Problema durante o envio de Email **
+
+As constantes STARTTLS e SMTPS não funcionaram. Foi passado o 'tls' representando o mesmo valor de STARTTLS
