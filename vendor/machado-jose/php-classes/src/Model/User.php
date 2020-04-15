@@ -9,12 +9,13 @@ use \Ecommerce\Mailer;
 class User extends Model{
 
 	const SESSION = "User";
+	const PASSWORD = 'senha';
 
 	public function save()
 	{
 		$sql = new Sql();
 
-		$passwordCrypt = User::cryptData($this->getdespassword());
+		$passwordCrypt = User::cryptPassword($this->getdespassword());
 
 		$results = $sql->select("CALL sp_users_save(
 			:pdesperson,
@@ -104,9 +105,9 @@ class User extends Model{
 			else
 			{
 
-				$code = User::cryptData(json_encode($results2["idrecovery"]));
+				$code = User::cryptData(json_encode($results2[0]["idrecovery"]));
 
-				$link = "http://e-commerce.com.br/admin/forgot/reset?code=$code";
+				$link = "http://e-commerce.com.br/admin/forgot/reset/$code";
 
 				$mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir Senha", 'forgot', array(
 					"name"=>$data['desperson'],
@@ -124,8 +125,8 @@ class User extends Model{
 	{
 		if($data != null)
 		{
-			define('SECRET', pack('a16', 'senha'));
-			define('SECRET_IV', pack('a16', 'senha'));
+			define('SECRET', pack('a16', User::PASSWORD));
+			define('SECRET_IV', pack('a16', User::PASSWORD));
 
 			return base64_encode(openssl_encrypt(
 		
@@ -141,11 +142,11 @@ class User extends Model{
 	}
 
 	private static function descryptData($cryptData)
-	{
+	{		
 		if($cryptData != null)
 		{
-			define('SECRET', pack('a16', 'senha'));
-			define('SECRET_IV', pack('a16', 'senha'));
+			define('SECRET', pack('a16', User::PASSWORD));
+			define('SECRET_IV', pack('a16', User::PASSWORD));
 
 			return openssl_decrypt(
 				$cryptData, 
@@ -158,12 +159,58 @@ class User extends Model{
 		return null;
 	}
 
+	public static function cryptPassword($password)
+	{
+		return password_hash($password, PASSWORD_DEFAULT, ["cost"=>12]);
+	}
+
+	public function setPassword($password)
+	{
+		$sql = new Sql();
+		$sql->query("UPDATE tb_users SET despassword = :password WHERE iduser = :iduser", array(
+			":password"=> $password,
+			":iduser"=> $this->getiduser()
+		));
+	}
+
 	private static function createSession($datas)
 	{
 		$user = new User();
 		$user->setDatas($datas);
 		$_SESSION[User::SESSION] = $user->getValues();
 		return $user;
+	}
+
+	public static function validForgotDescrypt($code)
+	{
+		$idrecovery = json_decode(User::descryptData(base64_decode($code)));
+		$sql = new Sql();
+		$results = $sql->select("SELECT *
+			FROM tb_userspasswordsrecoveries a
+			INNER JOIN tb_users b USING(iduser)
+			INNER JOIN tb_persons c USING(idperson)
+			WHERE
+				a.idrecovery = :idrecovery
+			    AND
+			    a.dtrecovery IS NULL
+			    AND
+			    DATE_ADD(a.dtregister, INTERVAL 1 HOUR) >= NOW()", array(
+			":idrecovery"=>$idrecovery
+		));
+		if(count($results) === 0)
+		{
+			throw new \Exception("Não foi possível recuperar a senha.");
+		}
+		else
+		{
+			return $results[0];
+		}
+	}
+
+	public static function setForgotUsed($idrecovery)
+	{
+		$sql = new Sql();
+		$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(":idrecovery"=>$idrecovery));
 	}
 
 	public static function login($deslogin, $despassword)
@@ -175,13 +222,7 @@ class User extends Model{
 
 		$datas = $results[0];
 
-		$passwordDescrypt = User::descryptData(base64_decode($datas['despassword']));
-
-		if($passwordDescrypt === $despassword){
-			User::createSession($datas);
-		}
-		// Essa condição foi escrita por causa do método de criptação armazenada no BD que hoje foi depreciada.
-		else if(password_verify($despassword, $datas['despassword']))
+		if(password_verify($despassword, $datas['despassword']))
 		{
 			User::createSession($datas);
 		}else
@@ -218,6 +259,7 @@ class User extends Model{
 		$sql = new Sql();
 		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson ");
 	}
+
 }
 
 ?>
