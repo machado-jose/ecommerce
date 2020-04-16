@@ -79,7 +79,8 @@ class Product extends Model
 
 	public function setPhoto($file)
 	{
-		$extension = end(explode('.', $file["name"]));
+		$extension = explode('.', $file["name"]);
+		$extension = end($extension);
 		switch ($extension) {
 			case 'jpg':
 			case 'jpeg':
