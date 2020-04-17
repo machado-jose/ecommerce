@@ -14,6 +14,17 @@ class Product extends Model
 		return $sql->select("SELECT * FROM tb_products ORDER BY desproduct");
 	}
 
+	public static function checkList($list)
+	{
+		foreach ($list as &$row) {
+			$p = new Product();
+			$p->setDatas($row);
+			$row = $p->getValues();
+		}
+
+		return $list;
+	}
+
 	public function save()
 	{
 		$sql = new Sql();
@@ -52,7 +63,7 @@ class Product extends Model
 	public function delete()
 	{
 		$sql = new Sql();
-		$sql->query("DELETE FROM tb_categories WHERE idproduct = :idproduct", array(
+		$sql->query("DELETE FROM tb_products WHERE idproduct = :idproduct", array(
 			":idproduct"=> $this->getidproduct()
 		));
 	}
