@@ -3,6 +3,7 @@
 use \Ecommerce\PageAdmin;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Category;
+use \Ecommerce\Model\Product;
 
 $app->get('/admin/categories', function(){
 	User::verifyLogin();
@@ -26,7 +27,7 @@ $app->post('/admin/categories/create', function(){
 	exit;
 });
 
-$app->get('/admin/categories/:idcategor/delete', function($idcategory){
+$app->get('/admin/categories/:idcategory/delete', function($idcategory){
 	User::verifyLogin();
 	$category = new Category();
     $category->get((int)$idcategory);
@@ -53,16 +54,38 @@ $app->post('/admin/categories/:idcategory', function($idcategory){
 	exit;
 });
 
-$app->get('/categories/:idcategory', function($idcategory){
+$app->get('/admin/categories/:idcategory/products', function($idcategory){
+	User::verifyLogin();
 	$category = new Category();
-	$category->get($idcategory);
-	/*var_dump($category->getValues());
-	exit;*/
-	$page = new Page();
-	$page->setTpl("category", array(
+	$category->get((int)$idcategory);
+	$page = new PageAdmin();
+	$page->setTpl("categories-products", array(
 		"category"=>$category->getValues(),
-		"products"=>[]
+		"productsNotRelated"=>$category->getProducts(false),
+		"productsRelated"=>$category->getProducts()
 	));
+});
+
+$app->get('/admin/categories/:idcategory/products/:idproduct/add', function($idcategory, $idproduct){
+	User::verifyLogin();
+	$category = new Category();
+	$product = new Product();
+	$category->get((int)$idcategory);
+	$product->get((int)$idproduct);
+	$category->addProduct($product);
+	header("Location: /admin/categories/".$idcategory."/products");
+	exit;
+});
+
+$app->get('/admin/categories/:idcategory/products/:idproduct/remove', function($idcategory, $idproduct){
+	User::verifyLogin();
+	$category = new Category();
+	$product = new Product();
+	$category->get((int)$idcategory);
+	$product->get((int)$idproduct);
+	$category->removeProduct($product);
+	header("Location: /admin/categories/".$idcategory."/products");
+	exit;
 });
 
 ?>
