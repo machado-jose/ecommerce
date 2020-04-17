@@ -64,6 +64,29 @@ class Category extends Model
 		}
 	}
 
+	public function getProductsPage($page = 1, $itemsPerPage = 8)
+	{
+		$sql = new Sql();
+		$start = ($page - 1) * $itemsPerPage;
+
+		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_products a
+			INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct
+			INNER JOIN tb_categories c ON c.idcategory = b.idcategory
+			WHERE c.idcategory = :idcategory
+			LIMIT $start, $itemsPerPage
+			", array(
+				':idcategory'=> $this->getidcategory()
+		));
+
+		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
+		return [
+			'data'=> Product::checkList($results),
+			'total'=> (int)$resultsTotal[0]['nrtotal'],
+			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
+		]; 
+	}
+
 	public function addProduct(Product $product)
 	{
 		$sql = new Sql();
@@ -103,7 +126,7 @@ class Category extends Model
 		$category = Category::listAll();
 		$html = [];
 		foreach ($category as $row) {
-			array_push($html, '<li><a href="/categories/'.$row['idcategory'].'">'.$row['descategory'].'</a></li>');		
+			array_push($html, '<li><a href="/categories/'.$row['idcategory']. '/1">'.$row['descategory'].'</a></li>');		
 		}
 		$filename = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'categories-menu.html';
 		file_put_contents($filename, implode('', $html));

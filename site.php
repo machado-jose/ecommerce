@@ -10,13 +10,23 @@ $app->get('/', function() {
 	$page->setTpl("index", ["products"=>Product::checklist($products)]);
 });
 
-$app->get('/categories/:idcategory', function($idcategory){
+$app->get('/categories/:idcategory/:npage', function($idcategory, $npage){
 	$category = new Category();
-	$category->get($idcategory);
+	$category->get((int)$idcategory);
+	$pagination = $category->getProductsPage($npage);
+	$pages = [];
+	for($i = 1; $i <= $pagination['pages']; $i++)
+	{
+		array_push($pages, [
+			"link"=> '/categories/'.$category->getidcategory().'/'.$i,
+			"page"=> $i
+		]);
+	}
 	$page = new Page();
 	$page->setTpl("category", array(
 		"category"=>$category->getValues(),
-		"products"=>Product::checkList($category->getProducts())
+		"products"=>$pagination['data'],
+		"pages"=>$pages
 	));
 });
 
