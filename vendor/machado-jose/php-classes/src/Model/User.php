@@ -12,6 +12,7 @@ class User extends Model{
 	const PASSWORD = "senha";
 	const SESSION_ERROR = "UserError";
 	const SESSION_REGISTER_ERROR = "UserRegisterError";
+	const SESSION_SUCCESS = "UserSuccess";
 
 	public function save()
 	{
@@ -348,6 +349,23 @@ class User extends Model{
 		$_SESSION[$errorType] = NULL;
 	}
 
+	public static function setMsgSuccess($msg)
+	{
+		$_SESSION[User::SESSION_SUCCESS] = $msg;
+	}
+
+	public static function getMsgSuccess()
+	{
+		$msg = (isset($_SESSION[User::SESSION_SUCCESS])) ? $_SESSION[User::SESSION_SUCCESS] : '';
+		User::clearMsgSuccess();
+		return $msg;
+	}
+
+	public static function clearMsgSuccess()
+	{
+		$_SESSION[User::SESSION_SUCCESS] = NULL;
+	}
+
 	public static function checkLoginExists($deslogin)
 	{
 		$sql = new Sql();
@@ -360,7 +378,12 @@ class User extends Model{
 		$sql = new Sql();
 		$result = $sql->select("SELECT * FROM tb_persons WHERE desemail = :desemail", [":desemail"=> $desemail]);
 		return (count($result) > 0);
-	}  
+	}
+
+	public function updateSession()
+	{
+		$_SESSION[User::SESSION] = $this->getValues();
+	}
 
 }
 
