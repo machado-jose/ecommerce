@@ -11,6 +11,7 @@ class User extends Model{
 	const SESSION = "User";
 	const PASSWORD = "senha";
 	const SESSION_ERROR = "UserError";
+	const SESSION_REGISTER_ERROR = "UserRegisterError";
 
 	public function save()
 	{
@@ -323,22 +324,36 @@ class User extends Model{
 		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson ");
 	}
 
-	public static function setMsgError($msg)
+	public static function setMsgError($msg, $errorType)
 	{
-		$_SESSION[User::SESSION_ERROR] = $msg;
+		$_SESSION[$errorType] = $msg;
 	}
 
-	public static function getMsgError()
+	public static function getMsgError($errorType)
 	{
-		$msg = (isset($_SESSION[User::SESSION_ERROR])) ? $_SESSION[User::SESSION_ERROR] : '';
-		User::clearMsgError();
+		$msg = (isset($_SESSION[$errorType])) ? $_SESSION[$errorType] : '';
+		User::clearMsgError($errorType);
 		return $msg;
 	}
 
-	public static function clearMsgError()
+	public static function clearMsgError($errorType)
 	{
-		$_SESSION[User::SESSION_ERROR] = NULL;
+		$_SESSION[$errorType] = NULL;
 	}
+
+	public static function checkLoginExists($deslogin)
+	{
+		$sql = new Sql();
+		$result = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [":deslogin"=> $deslogin]);
+		return (count($result) > 0);
+	}
+
+	public static function checkEmailExists($desemail)
+	{
+		$sql = new Sql();
+		$result = $sql->select("SELECT * FROM tb_persons WHERE desemail = :desemail", [":desemail"=> $desemail]);
+		return (count($result) > 0);
+	}  
 
 }
 
