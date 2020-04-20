@@ -9,7 +9,8 @@ use \Ecommerce\Mailer;
 class User extends Model{
 
 	const SESSION = "User";
-	const PASSWORD = 'senha';
+	const PASSWORD = "senha";
+	const SESSION_ERROR = "UserError";
 
 	public function save()
 	{
@@ -271,12 +272,42 @@ class User extends Model{
 		
 	}
 
+	public static function loginToEmail($desemail, $despassword)
+	{
+		$sql = new Sql();
+		$results = $sql->select("SELECT *
+			FROM tb_persons a
+			INNER JOIN tb_users b USING(idperson)
+			WHERE a.desemail = :desemail", [":desemail"=> $desemail]);
+
+		if(count($results) === 0 ) throw new \Exception("Usuário não encontrado ou Senha Inválida");
+
+		$datas = $results[0];
+
+		if(password_verify($despassword, $datas['despassword']))
+		{
+			User::createSession($datas);
+		}else
+		{
+			throw new \Exception("Usuário não encontrado ou Senha Inválida");
+		}
+		
+	}
+
 	public static function verifyLogin($inadmin = true)
 	{
 
 		if(!User::checkLogin($inadmin))
 		{
-			header("Location: /admin/login");
+			if($inadmin)
+			{
+				header("Location: /admin/login");
+			}
+			else
+			{
+				header("Location: /login");
+			}
+			
 			exit;
 		}
 	}
@@ -290,6 +321,23 @@ class User extends Model{
 	{
 		$sql = new Sql();
 		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson ");
+	}
+
+	public static function setMsgError($msg)
+	{
+		$_SESSION[User::SESSION_ERROR] = $msg;
+	}
+
+	public static function getMsgError()
+	{
+		$msg = (isset($_SESSION[User::SESSION_ERROR])) ? $_SESSION[User::SESSION_ERROR] : '';
+		User::clearMsgError();
+		return $msg;
+	}
+
+	public static function clearMsgError()
+	{
+		$_SESSION[User::SESSION_ERROR] = NULL;
 	}
 
 }
