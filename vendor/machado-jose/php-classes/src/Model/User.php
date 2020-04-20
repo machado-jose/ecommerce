@@ -118,7 +118,7 @@ class User extends Model{
 		));
 	}
 
-	public function getForgot($email)
+	public function getForgot($email, $inadmin = true)
 	{
 		$sql = new Sql();
 		$results = $sql->select("SELECT *
@@ -148,7 +148,14 @@ class User extends Model{
 
 				$code = User::cryptData(json_encode($results2[0]["idrecovery"]));
 
-				$link = "http://e-commerce.com.br/admin/forgot/reset/$code";
+				if($inadmin)
+				{
+					$link = "http://e-commerce.com.br/admin/forgot/reset/$code";
+				}
+				else
+				{
+					$link = "http://e-commerce.com.br/forgot/reset/$code";
+				}	
 
 				$mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir Senha", 'forgot', array(
 					"name"=>$data['desperson'],
