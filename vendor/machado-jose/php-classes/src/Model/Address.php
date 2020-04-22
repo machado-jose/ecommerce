@@ -110,7 +110,15 @@ class Address extends Model{
 			":deszipcode"=> $this->getdeszipcode()
 		]);
 		
-		return (bool)(count($results) > 0);
+		if(count($results) > 0)
+		{
+			$this->setDatas($results[0]);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }

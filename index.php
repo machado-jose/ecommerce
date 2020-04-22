@@ -19,6 +19,7 @@ require_once("site-checkout.php");
 require_once("site-products.php");
 require_once("site-profile.php");
 require_once("site-register.php");
+require_once("site-order.php");
 require_once("admin.php");
 require_once("admin-users.php");
 require_once("admin-forgot.php");

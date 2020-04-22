@@ -4,6 +4,8 @@ use \Ecommerce\Page;
 use \Ecommerce\Model\Cart;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Address;
+use \Ecommerce\Model\Order;
+use \Ecommerce\Model\OrderStatus;
 
 $app->get('/checkout', function(){
 
@@ -101,7 +103,22 @@ $app->post('/checkout', function(){
 
 	$address->setDatas($_POST);
 	if(!$address->verifyAddressExists()) $address->save();
-	header("Location: /order");
+
+	$order = new Order();
+	$cart = Cart::getFromSession();
+	$cart->getCalculateTotal();
+
+	$order->setDatas([
+		"idcart"=> $cart->getidcart(),
+		"iduser"=> $user->getiduser(),
+		"idstatus"=> OrderStatus::EM_ABERTO,
+		"idaddress"=> $address->getidaddress(),
+		"vltotal"=> $cart->getvltotal()
+	]);
+
+	$order->save();
+
+	header("Location: /order/".$order->getidorder());
 	exit;
 });
 
