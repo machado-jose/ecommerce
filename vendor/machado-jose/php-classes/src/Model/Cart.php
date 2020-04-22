@@ -94,6 +94,15 @@ class Cart extends Model
 
 	}
 
+	public function updateZipcode()
+	{
+		$sql = new Sql();
+		$sql->query("UPDATE tb_carts SET deszipcode = :deszipcode WHERE idcart = :idcart", array(
+			":deszipcode"=> $this->getdeszipcode(),
+			":idcart"=> $this->getidcart()
+		));
+	}
+
 	public function addProduct(Product $product)
 	{
 		$sql = new Sql();
