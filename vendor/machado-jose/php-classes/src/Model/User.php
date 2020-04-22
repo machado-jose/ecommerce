@@ -102,7 +102,7 @@ class User extends Model{
 			":piduser"=> $this->getiduser(),
 			":pdesperson"=> $this->getdesperson(),
 			":pdeslogin"=> $this->getdeslogin(),
-			":pdespassword"=> $this->getdespassword(),
+			":pdespassword"=> User::cryptPassword($this->getdespassword()),
 			":pdesemail"=> $this->getdesemail(),
 			":pnrphone"=> $this->getnrphone(),
 			":pinadmin"=> $this->getinadmin()
