@@ -93,7 +93,7 @@
                 
                 <div class="col-sm-6">
                     <div class="shopping-item">
-                        <a href="/cart">Carrinho - <span class="cart-amunt">R$100</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">5</span></a>
+                        <a href="/cart">Carrinho - <span class="cart-amunt">R$ <?php echo getCartVlSubtotal(); ?></span> <i class="fa fa-shopping-cart"></i> <span class="product-count"><?php echo getCartNrTotal(); ?></span></a>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                 </div> 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
+                        <li class="active"><a href="/">Home</a></li>
                         <li><a href="#">Produtos</a></li>
                         <li><a href="/cart">Carrinho</a></li>
                     </ul>
