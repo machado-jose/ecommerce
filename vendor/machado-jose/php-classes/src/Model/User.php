@@ -329,7 +329,7 @@ class User extends Model{
 	public static function listAll()
 	{
 		$sql = new Sql();
-		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson ");
+		return $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 	}
 
 	public static function setMsgError($msg, $errorType)
@@ -401,6 +401,45 @@ class User extends Model{
 		]);
 
 		return $results;
+	}
+
+	public static function getUsersPage($page = 1, $itemsPerPage = 8)
+	{
+		$sql = new Sql();
+		$start = ($page - 1) * $itemsPerPage;
+
+		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users a INNER JOIN tb_persons b USING(idperson) 
+			ORDER BY b.desperson
+			LIMIT $start, $itemsPerPage");
+
+		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
+		return [
+			'data'=> $results,
+			'total'=> (int)$resultsTotal[0]['nrtotal'],
+			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
+		]; 
+	}
+
+	public static function getUsersPageSearch($search, $page = 1, $itemsPerPage = 8)
+	{
+		$sql = new Sql();
+		$start = ($page - 1) * $itemsPerPage;
+
+		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users a INNER JOIN tb_persons b USING(idperson)
+			WHERE a.deslogin LIKE :search OR b.desperson LIKE :search OR b.desemail = :search 
+			ORDER BY b.desperson
+			LIMIT $start, $itemsPerPage", [
+				":search"=> '%'.$search.'%'
+			]);
+
+		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
+		return [
+			'data'=> $results,
+			'total'=> (int)$resultsTotal[0]['nrtotal'],
+			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
+		]; 
 	}
 
 }
