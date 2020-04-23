@@ -51,6 +51,11 @@ class Cart extends Model
 		return $cart;
 	}
 
+	public static function destroySession()
+	{
+		unset($_SESSION[Cart::SESSION]);
+	}
+
 	public function setToSession()
 	{
 		$_SESSION[Cart::SESSION] = $this->getValues();

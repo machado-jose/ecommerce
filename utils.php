@@ -3,9 +3,14 @@
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Cart;
 
-function formatPrice(float $price)
+function formatPrice($price = NULL)
 {
-	return number_format($price, 2, ",", ".");
+	return ($price) ? number_format($price, 2, ",", ".") : 0;
+}
+
+function formatDate($date)
+{
+	return date('d/m/Y', strtotime($date));
 }
 
 function checkLogin($inadmin = true)

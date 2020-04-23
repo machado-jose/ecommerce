@@ -12,6 +12,9 @@ $app->get('/order/:idorder', function($idorder){
 	$order = new Order();
 	$order->get((int)$idorder);
 
+	session_regenerate_id();
+	Cart::destroySession();
+	
 	$page = new Page();
 	$page->setTpl('payment', [
 		"order"=> $order->getValues()
