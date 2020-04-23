@@ -91,4 +91,56 @@ $app->post('/admin/users/:iduser', function($iduser) {
     exit;
 });
 
+$app->get('/admin/users/:iduser/password', function($iduser){
+
+    User::verifyLogin();
+
+    $user = new User();
+    $user->get($iduser);
+
+    $page = new PageAdmin();
+    $page->setTpl("users-password", array(
+        "user"=> $user->getValues(),
+        "msgError"=> User::getMsgError(User::SESSION_REGISTER_ERROR),
+        "msgSuccess"=> User::getMsgSuccess(User::SESSION_SUCCESS)
+    ));
+
+});
+
+$app->post('/admin/users/:iduser/password', function($iduser){
+
+    User::verifyLogin();
+
+    $user = new User();
+    $user->get($iduser);
+
+    if(!isset($_POST['despassword']) || $_POST['despassword'] === '')
+    {
+        User::setMsgError("Digite a nova senha.", User::SESSION_REGISTER_ERROR);
+            header("Location: /admin/users/".$iduser."/password");
+            exit;
+    }
+
+    if(!isset($_POST['despassword-confirm']) || $_POST['despassword-confirm'] === '')
+    {
+        User::setMsgError("Confirme a nova senha.", User::SESSION_REGISTER_ERROR);
+            header("Location: /admin/users/".$iduser."/password");
+            exit;
+    }
+
+    if($_POST['despassword'] !== $_POST['despassword-confirm'])
+    {
+        User::setMsgError("Confirme corretamente a senha.", User::SESSION_REGISTER_ERROR);
+            header("Location: /admin/users/".$iduser."/password");;
+            exit;
+    }
+
+    $user->setdespassword($_POST['despassword']);
+    $user->update();
+    User::setMsgSuccess("Senha alterada com sucesso.");
+    header("Location: /admin/users/".$iduser."/password");
+    exit;
+
+});
+
 ?>

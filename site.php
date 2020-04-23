@@ -28,7 +28,7 @@ $app->post('/login', function(){
 	{
 		User::setMsgError($e->getMessage(), User::SESSION_ERROR);
 	}
-	header("location: /checkout");
+	header("location: /cart");
 	exit;
 });
 
