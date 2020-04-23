@@ -5,10 +5,34 @@ use \Ecommerce\Model\User;
 use \Ecommerce\Model\Product;
 
 $app->get('/admin/products', function(){
+
 	User::verifyLogin();
-	$products = Product::listAll();
+	
+	$search = (isset($_GET['search'])) ? $_GET['search'] : '';
+    $nrpage = (isset($_GET['page'])) ? $_GET['page'] : 1;
+
+    $pagination = ($search != '') ? Product::getProductsPageSearch($search, $nrpage) : Product::getProductsPage($nrpage); 
+
+    $pages = [];
+
+    for($x = 1; $x <= $pagination['pages']; $x++)
+    {
+        array_push($pages, [
+            'href'=> '/admin/products?'.http_build_query([
+                "page"=>$x,
+                "search"=>$search
+            ]),
+            'text'=> $x
+        ]);
+
+    }
+
 	$page = new PageAdmin();
-	$page->setTpl('products',["products"=>$products]);
+	$page->setTpl('products',[
+		"products"=> $pagination['data'],
+        "search"=> $search,
+        "pages"=> $pages
+	]);
 });
 
 $app->get('/admin/products/create', function(){
