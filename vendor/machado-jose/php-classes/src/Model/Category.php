@@ -132,5 +132,44 @@ class Category extends Model
 		file_put_contents($filename, implode('', $html));
 	}
 
+	public static function getCategoriesPage($page = 1, $itemsPerPage = 8)
+	{
+		$sql = new Sql();
+		$start = ($page - 1) * $itemsPerPage;
+
+		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_categories 
+			ORDER BY descategory
+			LIMIT $start, $itemsPerPage");
+
+		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
+		return [
+			'data'=> $results,
+			'total'=> (int)$resultsTotal[0]['nrtotal'],
+			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
+		]; 
+	}
+
+	public static function getCategoriesPageSearch($search, $page = 1, $itemsPerPage = 8)
+	{
+		$sql = new Sql();
+		$start = ($page - 1) * $itemsPerPage;
+
+		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_categories
+			WHERE descategory LIKE :search
+			ORDER BY descategory
+			LIMIT $start, $itemsPerPage", [
+				":search"=> '%'.$search.'%'
+			]);
+
+		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
+		return [
+			'data'=> $results,
+			'total'=> (int)$resultsTotal[0]['nrtotal'],
+			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
+		]; 
+	}
+
 }
 ?>

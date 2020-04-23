@@ -7,9 +7,31 @@ use \Ecommerce\Model\Product;
 
 $app->get('/admin/categories', function(){
 	User::verifyLogin();
-	$categories = Category::listAll();
+
+	$search = (isset($_GET['search'])) ? $_GET['search'] : '';
+    $nrpage = (isset($_GET['page'])) ? $_GET['page'] : 1;
+
+    $pagination = ($search != '') ? Category::getCategoriesPageSearch($search, $nrpage) : Category::getCategoriesPage($nrpage); 
+
+    $pages = [];
+    for($x = 1; $x <= $pagination['pages']; $x++)
+    {
+        array_push($pages, [
+            'href'=> '/admin/categories?'.http_build_query([
+                "page"=>$x,
+                "search"=>$search
+            ]),
+            'text'=> $x
+        ]);
+
+    }
+
 	$page = new PageAdmin();
-	$page->setTpl("categories",["categories"=>$categories]);
+	$page->setTpl("categories",[
+		"categories"=> $pagination['data'],
+        "search"=> $search,
+        "pages"=> $pages
+	]);
 });
 
 $app->get('/admin/categories/create', function(){
