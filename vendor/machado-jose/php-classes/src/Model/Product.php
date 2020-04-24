@@ -174,5 +174,58 @@ class Product extends Model
 		]; 
 	}
 
+	public function getDescription()
+	{
+
+		$filename = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 
+			'res' . DIRECTORY_SEPARATOR .
+			'site' . DIRECTORY_SEPARATOR .
+			'products-description' . DIRECTORY_SEPARATOR .
+			$this->getidproduct() . '.html';
+
+		$path = '..'.DIRECTORY_SEPARATOR.
+		    '..'. DIRECTORY_SEPARATOR .
+		    'res' . DIRECTORY_SEPARATOR .
+			'site' . DIRECTORY_SEPARATOR .
+			'products-description' . DIRECTORY_SEPARATOR .
+			$this->getidproduct();
+
+		if(file_exists($filename))
+		{
+			$file = fopen($filename, "r");
+			$content = file_get_contents($filename);
+			fclose($file);
+			$this->setdescription($content);
+			$this->setpath($path);
+		}
+		
+	}
+
+	public function saveDescription($content)
+	{
+	
+		$filename = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 
+			'res' . DIRECTORY_SEPARATOR .
+			'site' . DIRECTORY_SEPARATOR .
+			'products-description' . DIRECTORY_SEPARATOR .
+			$this->getidproduct() . '.html';
+
+		$file = fopen($filename, "w+");
+		fwrite($file, $content);
+		fclose($file);
+	}
+
+	public function deleteDescription()
+	{
+	
+		$filename = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 
+			'res' . DIRECTORY_SEPARATOR .
+			'site' . DIRECTORY_SEPARATOR .
+			'products-description' . DIRECTORY_SEPARATOR .
+			$this->getidproduct() . '.html';
+
+		unlink($filename);
+	}
+
 }
 ?>

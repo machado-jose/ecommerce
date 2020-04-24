@@ -1,5 +1,6 @@
 <?php 
 	
+use Rain\Tpl;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Cart;
 

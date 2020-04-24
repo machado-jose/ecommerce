@@ -7,6 +7,7 @@ $app->get('/products/:desurl', function($desurl){
 
 	$product = new Product();
 	$product->getFromUrl($desurl);
+	$product->getDescription();
 	$page = new Page();
 	$page->setTpl("product-detail", array(
 		"product"=>$product->getValues(),
