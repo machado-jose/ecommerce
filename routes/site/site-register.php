@@ -63,7 +63,7 @@ $app->post('/register', function(){
 	));
 	$user->save();
 	User::loginToEmail($_POST['email'], $_POST['password']);
-	header("location: /checkout");
+	header("location: /");
 	exit;
 });
 
