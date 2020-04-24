@@ -70,6 +70,13 @@ $app->post('/checkout', function(){
 		exit;
 	}
 
+	if(!isset($_POST['desnumber']) || $_POST['desnumber'] === '')
+	{
+		User::setMsgError("Informe o número.", User::SESSION_REGISTER_ERROR);
+		header("Location: /checkout");
+		exit;
+	}
+
 	if(!isset($_POST['desdistrict']) || $_POST['desdistrict'] === '')
 	{
 		User::setMsgError("Informe o Bairro.", User::SESSION_REGISTER_ERROR);

@@ -15,6 +15,7 @@ $app->get('/categories/:idcategory/:npage', function($idcategory, $npage){
 			"page"=> $i
 		]);
 	}
+
 	$page = new Page();
 	$page->setTpl("category", array(
 		"category"=>$category->getValues(),

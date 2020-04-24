@@ -47,7 +47,7 @@ $app->get('/boleto/:idorder', function($idorder){
 
 	// DADOS DO SEU CLIENTE
 	$dadosboleto["sacado"] = $order->getdesperson();
-	$dadosboleto["endereco1"] = $order->getdesaddress() . ' ' . $order->getdesdistrict();
+	$dadosboleto["endereco1"] = $order->getdesaddress() . ', '.$order->getdesnumber().' ' . $order->getdesdistrict();
 	$dadosboleto["endereco2"] = $order->getdescity() . ' - ' . $order->getdesstate() . ' - CEP: ' .  $order->getdeszipcode();
 
 	// INFORMACOES PARA O CLIENTE

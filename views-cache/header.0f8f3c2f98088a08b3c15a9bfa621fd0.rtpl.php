@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php if(!class_exists('Rain\Tpl')){exit;}?><!DOCTYPE html>
 <!--
     Hcode Store by hcode.com.br
 -->
@@ -43,38 +43,20 @@
                             <li><a href="/profile"><i class="fa fa-user"></i> Minha Conta</a></li>
                             <li><a href="#"><i class="fa fa-heart"></i> Lista de Desejos</a></li>
                             <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Meu Carrinho</a></li>
-                            {if="checkLogin(false)"}
-                            <li><a href="/profile"><i class="fa fa-user"></i>{function="getUserName()"}</a></li>
-                            <li><a href="/logout"><i class="fa fa-close"></i>Sair</a></li>
-                            {else}
-                            <li><a href="/login"><i class="fa fa-lock"></i> Login</a></li>
-                            {/if}
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="header-right">
-                        <ul class="list-unstyled list-inline">
-                            <li class="dropdown dropdown-small">
-                                <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" href="#"><span class="key">moeda :</span><span class="value">BRL </span><b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">BRL</a></li>
-                                    <li><a href="#">USD</a></li>
-                                </ul>
-                            </li>
+                            <?php if( checkLogin(false) ){ ?>
 
-                            <li class="dropdown dropdown-small">
-                                <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" href="#"><span class="key">linguagem :</span><span class="value">Português </span><b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Português</a></li>
-                                    <li><a href="#">Inglês</a></li>
-                                    <li><a href="#">Espanhol</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="/profile"><i class="fa fa-user"></i><?php echo getUserName(); ?></a></li>
+                            <li><a href="/logout"><i class="fa fa-close"></i>Sair</a></li>
+                            <?php }else{ ?>
+
+                            <li><a href="/login"><i class="fa fa-lock"></i> Login</a></li>
+                            <?php } ?>
+
                         </ul>
                     </div>
                 </div>
+                <?php require $this->checkTemplate("header-options-country");?>
+
             </div>
         </div>
     </div> <!-- End header area -->
@@ -90,7 +72,7 @@
                 
                 <div class="col-sm-6">
                     <div class="shopping-item">
-                        <a href="/cart">Carrinho - <span class="cart-amunt">R$ {function="getCartVlSubtotal()"}</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">{function="getCartNrTotal()"}</span></a>
+                        <a href="/cart">Carrinho - <span class="cart-amunt">R$ <?php echo getCartVlSubtotal(); ?></span> <i class="fa fa-shopping-cart"></i> <span class="product-count"><?php echo getCartNrTotal(); ?></span></a>
                     </div>
                 </div>
             </div>
