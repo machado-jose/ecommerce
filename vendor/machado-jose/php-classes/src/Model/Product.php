@@ -141,6 +141,8 @@ class Product extends Model
 			ORDER BY desproduct
 			LIMIT $start, $itemsPerPage");
 
+		$results = Product::checkList($results);
+		
 		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
 		return [
 			'data'=> $results,
@@ -161,6 +163,8 @@ class Product extends Model
 			LIMIT $start, $itemsPerPage", [
 				":search"=> '%'.$search.'%'
 			]);
+
+		$results = Product::checkList($results);
 
 		$resultsTotal = $sql->select("SELECT FOUND_ROWS() as nrtotal");
 		return [

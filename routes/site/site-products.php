@@ -14,4 +14,33 @@ $app->get('/products/:desurl', function($desurl){
 	));
 });
 
+$app->get('/products', function(){
+
+	$nrpage = (isset($_GET['page'])) ? $_GET['page'] : 1;
+	$search = (isset($_GET['search'])) ? $_GET['search'] : '';
+
+	$pagination = ($search != '') ? Product::getProductsPageSearch($search, $nrpage) : Product::getProductsPage($nrpage);
+
+	$pages = [];
+
+	for($x = 1; $x <= $pagination['pages']; $x++)
+    {
+        array_push($pages, [
+            'link'=> '/products?'.http_build_query([
+                "page"=>$x
+            ]),
+            'page'=> $x
+        ]);
+
+    }
+
+	$page = new Page();
+	$page->setTpl("products", array(
+		"products"=>$pagination['data'],
+		"search"=> $search,
+		"pages"=>$pages
+	));
+
+});
+
 ?>
