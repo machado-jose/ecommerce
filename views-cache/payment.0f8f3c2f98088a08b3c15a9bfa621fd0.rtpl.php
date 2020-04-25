@@ -266,10 +266,10 @@
     <img src="https://stc.pagseguro.uol.com.br/{{image}}" alt="{{name}}" style="float:left; margin-right:4px;">
 </script>
 <script id="tpl-installment-free" type="text/x-handlebars-template">
-    <option>{{quantity}}x de R${{installmentAmount}} sem juros</option>
+    <option>{{quantity}}x de {{installmentAmount}} sem juros</option>
 </script>
 <script id="tpl-installment" type="text/x-handlebars-template">
-    <option>{{quantity}}x de R${{installmentAmount}} com juros (R${{totalAmount}})</option>
+    <option>{{quantity}}x de {{installmentAmount}} com juros ({{totalAmount}})</option>
 </script>
 <!-- To PagSeguro -->
 <script src="<?php echo htmlspecialchars( $pagseguro["urlJS"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"></script>
@@ -341,15 +341,74 @@
                 PagSeguroDirectPayment.getBrand({
                     cardBin: value.substring(0, 6),
                     success: function(response) {
+
                         $("#brand-field").val(response.brand.name);
-                        console.log(response.brand.name);
+
+                        PagSeguroDirectPayment.getInstallments({
+
+                                amount: parseFloat("<?php echo htmlspecialchars( $order["vltotal"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"),
+                                maxInstallmentNoInterest: parseInt(<?php echo htmlspecialchars( $pagseguro["maxInstallmentNoInterest"], ENT_COMPAT, 'UTF-8', FALSE ); ?>),
+                                brand: $("#brand-field").val(),
+                                success: function(response){
+
+                                    $("#installments_field").html('<option disabled="disabled"></option>');
+
+                                    let tplInstallmentFree = Handlebars.compile($("#tpl-installment-free").html());
+
+                                    let tplInstallment = Handlebars.compile($("#tpl-installment").html());
+
+                                    let formatReal = {
+                                        minimumFractionDigits: 2,
+                                        style: "currency",
+                                        currency: "BRL"
+                                    };
+
+                                    $.each(response.installments[$("#brand-field").val()], function(index, installment){
+
+                                        if(parseInt(<?php echo htmlspecialchars( $pagseguro["maxInstallment"], ENT_COMPAT, 'UTF-8', FALSE ); ?>) > index)
+                                        {
+                                            if(installment.interestFree)
+                                            {
+                                                var option = $(tplInstallmentFree({
+                                                    quantity: installment.quantity,
+                                                    installmentAmount: installment.installmentAmount.toLocaleString('pt-br', formatReal)
+                                                }));
+                                            }else{
+
+                                                var option = $(tplInstallment({
+                                                    quantity: installment.quantity,
+                                                    installmentAmount: installment.installmentAmount.toLocaleString('pt-br', formatReal),
+                                                    totalAmount: installment.totalAmount.toLocaleString('pt-br', formatReal)
+                                                }));
+                                            }
+                                            
+                                            option.data("installment", installment);
+                                            $("#installments_field").append(option);
+                                        }
+
+                                    });
+                               },
+                                error: function(response) {
+                                    let errors = [];
+                                    for(var code in response.errors){
+                                        errors.push(response.errors[code])
+                                    }
+                                    showError(errors.toString());
+                               },
+                                complete: function(response){
+                                    // Callback para todas chamadas.
+                               }
+                        });
+                        
                     },
                     error: function(response) {
+
                         let errors = [];
                         for(var code in response.errors){
                             errors.push(response.errors[code])
                         }
                         showError(errors.toString());
+
                     },
                     complete: function(response) {
                       //tratamento comum para todas chamadas
