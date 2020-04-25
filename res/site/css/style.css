@@ -34,7 +34,10 @@ body { font-family:Arial, Helvetica, sans-serif; }
     background: none repeat scroll 0 0 #f4f4f4;
 }
 .header-area a {
-    color: #888;
+    color: #444;
+}
+.header-area a.add_to_cart_button{
+  color: #fff;
 }
 .user-menu ul {
     list-style: outside none none;
@@ -363,7 +366,7 @@ z-index: 999;}
 .single-promo:hover {color: #fff;background: #222;}
 .promo1 { background:#22abe6;}
 .promo2 { background:#ffd900;}
-.promo3 { background:#fa8072;}
+.promo3 { background:#79cced;}
 .promo4 { background:#4abebd;}
 .section-title {
   font-family: "Raleway",sans-serif;
@@ -459,13 +462,13 @@ z-index: 999;}
 }
 
 .latest-product .owl-nav div, .related-products-wrapper .owl-nav div {
-  background:#fa8072;
+  background:#79cced;
   color:#FFF;
   display: inline-block;
   margin-left: 15px;
   padding: 1px 10px;
 }
-.latest-product .owl-nav div:hover, .brand-wrapper .owl-nav div:hover, .related-products-wrapper .owl-nav div:hover {color: #FFF; background:#f95f5f;}
+.latest-product .owl-nav div:hover, .brand-wrapper .owl-nav div:hover, .related-products-wrapper .owl-nav div:hover {color: #FFF; background:#79cced;}
 .brand-list {padding-top: 40px;}
 .brand-list .owl-nav {
   position: absolute;
@@ -481,7 +484,7 @@ z-index: 999;}
 }
 
 .brand-wrapper .owl-nav div {
-  background:#fa8072;
+  background:#79cced;
   color:#FFF;
   display: inline-block;
   margin-left: 15px;

@@ -7,3 +7,5 @@ Link: https://m.pagseguro.uol.com.br/preferencias/integracoes.jhtml
 
 4. Adicionar as rotas referentes ao Pagseguro no arquivo site-pagseguro.php
 
+5. Handlebars é uma biblioteca do js para renderizar templates. Elas foram passadas pela tag script (type="text/x-handlebars-template" ). Para baixar: https://handlebarsjs.com/installation/#npm-or-yarn-recommended
+

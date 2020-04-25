@@ -19,7 +19,7 @@ $app->get('/payment', function(){
 		array_push($years, $y);
 	}
 
-	$page = new Page(["footer"=>false]);
+	$page = new Page();
 	$page->setTpl('payment',[
 		"order"=> $order->getValues(),
 		"msgError"=> Order::getMsgError(),

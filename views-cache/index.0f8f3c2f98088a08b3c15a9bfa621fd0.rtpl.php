@@ -78,6 +78,7 @@
         </div>
     </div> <!-- End main content area -->
     
+    <h2 class="section-title">Marcas</h2>
     <div class="brands-area">
         <div class="zigzag-bottom"></div>
         <div class="container">

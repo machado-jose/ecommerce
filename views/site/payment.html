@@ -264,5 +264,66 @@
 <script id="tpl-installment" type="text/x-handlebars-template">
     <option>{{quantity}}x de R${{installmentAmount}} com juros (R${{totalAmount}})</option>
 </script>
+<!-- To PagSeguro -->
 <script src="{$pagseguro.urlJS}"></script>
+
 <script type="text/javascript">PagSeguroDirectPayment.setSessionId('{$pagseguro.id}');</script>
+
+<!-- The scripts array was created in header.html
+    It is necessary to store the functions so that they can be executed after loading the JQuery file that is in the footer.html file -->
+<script type="text/javascript">
+
+    scripts.push(function(){
+
+        function showError(error)
+        {
+            $("#alert-error span.msg").text(error);
+            $("#alert-error").removeClass("hide");
+        }
+
+        PagSeguroDirectPayment.getPaymentMethods({
+            amount: parseFloat("{$order.vltotal}"),
+            success: function(response) {
+
+                let tplDebit = Handlebars.compile($("#tpl-payment-debit").html());
+                let tplCredit = Handlebars.compile($("#tpl-payment-credit").html());
+
+                $.each(response.paymentMethods.ONLINE_DEBIT.options, function(index, option){
+                    
+                    $('#tab-debito .contents').append(tplDebit({
+                        value: option.name,
+                        text: option.displayName,
+                        image: option.images.MEDIUM.path
+                    }));
+
+                });
+
+                $.each(response.paymentMethods.CREDIT_CARD.options, function(index, option){
+
+                    $('#tab-credito .contents').append(tplCredit({
+                        name: option.name,
+                        image: option.images.MEDIUM.path
+                    }));       
+
+                });
+
+                $("#loading").hide();
+                $("#payment-methods").removeClass('hide');
+                $("#tabs-methods .nav-link:first").tab("show");
+            },
+            error: function(response) {
+
+                let errors = [];
+                for(var code in response.errors){
+                    errors.push(response.errors[code])
+                }
+                showError(errors.toString());
+
+            },
+            complete: function(response) {
+                
+            }
+        });
+    })
+    
+</script>

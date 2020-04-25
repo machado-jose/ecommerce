@@ -103,4 +103,9 @@
             </div>
         </div>
     </div> <!-- End mainmenu area -->
+
+    <!-- Adding script to PagSeguro -->
+    <script type="text/javascript">
+        window.scripts = [];
+    </script> 
     
