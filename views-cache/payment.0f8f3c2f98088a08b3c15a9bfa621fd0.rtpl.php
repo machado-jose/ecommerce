@@ -132,6 +132,8 @@
 
                                                     <form action="/payment/credit" class="checkout" method="post" name="checkout" style="padding:10px;" id="form-credit">
 
+                                                        <input type="hidden" name="brand" id="brand-field">
+
                                                         <div class="row">
                                                             <div class="col-sm-4">
                                                                 <div class="form-row form-row-wide address-field validate-required">
@@ -329,6 +331,34 @@
                 
             }
         });
-    })
+
+        $("#number_field").on('change', function(){
+
+            let value = $(this).val();
+
+            if(value.length >= 6)
+            {
+                PagSeguroDirectPayment.getBrand({
+                    cardBin: value.substring(0, 6),
+                    success: function(response) {
+                        $("#brand-field").val(response.brand.name);
+                        console.log(response.brand.name);
+                    },
+                    error: function(response) {
+                        let errors = [];
+                        for(var code in response.errors){
+                            errors.push(response.errors[code])
+                        }
+                        showError(errors.toString());
+                    },
+                    complete: function(response) {
+                      //tratamento comum para todas chamadas
+                    }
+                });
+            }
+
+        });
+
+    });
     
 </script>
