@@ -6,12 +6,12 @@ class Config
 {
 	const SANDBOX = true;
 
-	const SANDBOX_EMAIL = "***";
-	const PRODUCTION_EMAIL = "***";
+	const SANDBOX_EMAIL = "*";
+	const PRODUCTION_EMAIL = "*";
 
-	const SANDBOX_TOKEN = "***";
+	const SANDBOX_TOKEN = "*";
 	// ****** This token is private ******
-	const PRODUCTION_TOKEN = "***";
+	const PRODUCTION_TOKEN = "*";
 
 	const SANDBOX_SESSION = "https://ws.sandbox.pagseguro.uol.com.br/v2/sessions";
 	const PRODUCTION_SESSION= "https://ws.pagseguro.uol.com.br/v2/sessions";

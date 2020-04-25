@@ -4,7 +4,7 @@ use \Ecommerce\Page;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Order;
 use \Ecommerce\PagSeguro\Config;
-use \GuzzleHttp\Client;
+use \Ecommerce\PagSeguro\Transporter;
 
 $app->get('/payment', function(){
 
@@ -25,20 +25,11 @@ $app->get('/payment', function(){
 		"msgError"=> Order::getMsgError(),
 		"years"=> $years,
 		"pagseguro"=> [
-			"urlJS"=> Config::getUrlJS()
+			"urlJS"=> Config::getUrlJS(),
+			"id"=>  Transporter::createSession()
 		]
 	]);
 
-});
-
-$app->get('/payment/pagseguro', function(){
-
-	$client = new Client();
-	$res = $client->request('POST', Config::getUrlSession().'?'.http_build_query(Config::getAuthentication()), [
-		"verify"=>false
-	]);
-
-	echo $res->getBody()->getContents();
 });
 
 ?>
