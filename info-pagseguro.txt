@@ -1,0 +1,9 @@
+1. Depois de criar a conta, você precisa habilitar a Página de redirecionamento.
+Link: https://m.pagseguro.uol.com.br/preferencias/integracoes.jhtml
+
+2. Depois do item 1, você gera o token de produção (Aviso: Não pode ser compartilhado por ninguém).
+
+3. Criar uma classe chamada Config.php no projeto.
+
+4. Adicionar as rotas referentes ao Pagseguro no arquivo site-pagseguro.php
+

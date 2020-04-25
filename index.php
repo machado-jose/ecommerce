@@ -20,6 +20,7 @@ require_once("routes/site/site-products.php");
 require_once("routes/site/site-profile.php");
 require_once("routes/site/site-register.php");
 require_once("routes/site/site-order.php");
+require_once("routes/site/site-pagseguro.php");
 require_once("routes/admin/admin.php");
 require_once("routes/admin/admin-users.php");
 require_once("routes/admin/admin-forgot.php");
