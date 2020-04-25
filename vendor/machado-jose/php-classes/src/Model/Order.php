@@ -8,6 +8,7 @@ use \Ecommerce\Model\Cart;
 
 class Order extends Model{
 
+	const SESSION_ORDER = "Order";
 	const SESSION_ORDER_ERROR = "OrderError";
 	const SESSION_ORDER_SUCCESS = "OrderSuccess";
 	
@@ -171,6 +172,16 @@ class Order extends Model{
 			'total'=> (int)$resultsTotal[0]['nrtotal'],
 			'pages'=> (int)ceil($resultsTotal[0]['nrtotal'] / $itemsPerPage)
 		]; 
+	}
+
+	public function toSession()
+	{
+		$_SESSION[Order::SESSION_ORDER] = $this->getValues();
+	}
+
+	public function getFromSession()
+	{
+		$this->setDatas($_SESSION[Order::SESSION_ORDER]);
 	}
 
 }
