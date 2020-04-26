@@ -5,6 +5,7 @@ namespace Ecommerce\Model;
 use \Ecommerce\DB\Sql;
 use \Ecommerce\Model\Model;
 use \Ecommerce\Model\Cart;
+use \Ecommerce\Model\Address;
 
 class Order extends Model{
 
@@ -182,6 +183,13 @@ class Order extends Model{
 	public function getFromSession()
 	{
 		$this->setDatas($_SESSION[Order::SESSION_ORDER]);
+	}
+
+	public function getAddress():Address
+	{
+		$address = new Address();
+		$address->setDatas($this->getValues());
+		return $address;
 	}
 
 }

@@ -447,9 +447,18 @@
                expirationYear: params.year, // Ano da expiração do cartão, é necessário os 4 dígitos.
                success: function(response) {
 
-                    console.log("TOKEN: ", response.card.token);
-                    console.log("Hash: ", hashCredit);
-                    console.log("params: ", params);
+                    params.token = response.card.token;
+                    params.hash = hashCredit;
+                    
+                    $.post(
+                        "/payment/credit",
+                        $.param(params),
+                        function(r){
+
+                            console.log(r);
+                        }
+                    );
+
                },
                error: function(response) {
                     setError(response);

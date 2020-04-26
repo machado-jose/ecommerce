@@ -3,8 +3,25 @@
 use \Ecommerce\Page;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Order;
+use \Ecommerce\Model\Cart;
 use \Ecommerce\PagSeguro\Config;
 use \Ecommerce\PagSeguro\Transporter;
+
+$app->post('/payment/credit', function(){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+	$order->getFromSession();
+
+	$address = $order->getAddress();
+	$cart = $order->getCart();
+
+	var_dump($address->getValues());
+	var_dump($cart->getValues());
+	var_dump($order->getValues());
+	exit;
+});
 
 $app->get('/payment', function(){
 
