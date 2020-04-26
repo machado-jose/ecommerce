@@ -27,6 +27,9 @@ class Document
 				}
 				break;
 		}
+
+		$this->type = $type;
+		$this->value = $value;
 	}
 
 	public function isValidCPF($number):bollean

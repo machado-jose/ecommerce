@@ -13,6 +13,7 @@ class Config
 	// ****** This token is private ******
 	const PRODUCTION_TOKEN = "*";
 
+
 	const SANDBOX_SESSION = "https://ws.sandbox.pagseguro.uol.com.br/v2/sessions";
 	const PRODUCTION_SESSION= "https://ws.pagseguro.uol.com.br/v2/sessions";
 
