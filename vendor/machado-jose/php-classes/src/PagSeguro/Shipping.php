@@ -1,8 +1,10 @@
 <?php 
 
-costspace Ecommerce\PagSeguro;
+namespace Ecommerce\PagSeguro;
 
-use \Ecommerce\PagSeguro\Address;
+use Exception;
+use DOMDocument;
+use DOMElement;
 
 class Shipping
 {
@@ -16,9 +18,9 @@ class Shipping
 	private $cost;
 
 	public function __construct(Address $address,
-		bool $addressRequired = true,
 		int $type,
-		float $cost
+		float $cost,
+		bool $addressRequired = true
 	)
 	{
 		if($type < 1 || $type > 3)
@@ -41,8 +43,8 @@ class Shipping
 		$shipping = $dom->createElement("shipping");
 		$shipping = $dom->appendChild($shipping);
 
-		$cost = $dom->createElement("cost", number_format($this->cost, 2, ".", ""));
-		$cost = $shipping->appendChild($cost);
+		$addressRequired = $dom->createElement("addressRequired", ($this->addressRequired) ? "true" : "false");
+		$addressRequired = $shipping->appendChild($addressRequired);
 
 		$address = $this->address->getDOMElement();
 		$address = $dom->importNode($address, true);
@@ -51,8 +53,8 @@ class Shipping
 		$type = $dom->createElement("type", $this->type);
 		$type = $shipping->appendChild($type);
 
-		$addressRequired = $dom->createElement("addressRequired", ($this->addressRequired) ? "true" : "false");
-		$addressRequired = $shipping->appendChild($addressRequired);
+		$cost = $dom->createElement("cost", number_format($this->cost, 2, ".", ""));
+		$cost = $shipping->appendChild($cost);
 
 		return $shipping;
 	}

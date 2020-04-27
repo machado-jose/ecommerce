@@ -2,6 +2,10 @@
 
 namespace Ecommerce\PagSeguro;
 
+use Exception;
+use DOMDocument;
+use DOMElement;
+
 class Sender
 {
 	private $name;
@@ -53,8 +57,9 @@ class Sender
 		$email = $dom->createElement("email", $this->email);
 		$email = $sender->appendChild($email);
 
-		$hash = $dom->createElement("hash", $this->hash);
-		$hash = $sender->appendChild($hash);
+		$phone = $this->phone->getDOMElement();
+		$phone = $dom->importNode($phone, true);
+		$phone = $sender->appendChild($phone);
 
 		$documents = $dom->createElement("documents");
 		$documents = $sender->appendChild($documents);
@@ -64,9 +69,8 @@ class Sender
 		$document = $dom->importNode($document, true);
 		$document = $documents->appendChild($document);
 
-		$phone = $this->phone->getDOMElement();
-		$phone = $dom->importNode($phone, true);
-		$phone = $sender->appendChild($phone);
+		$hash = $dom->createElement("hash", $this->hash);
+		$hash = $sender->appendChild($hash);
 
 		return $sender;
 	}

@@ -1,6 +1,12 @@
 <?php 
 
-tokenspace Ecommerce\PagSeguro;
+namespace Ecommerce\PagSeguro;
+
+use Exception;
+use DOMDocument;
+use DOMElement;
+use \Ecommerce\PagSeguro\CreditCard\Installment;
+use \Ecommerce\PagSeguro\CreditCard\Holder;
 
 class CreditCard
 {
@@ -30,7 +36,7 @@ class CreditCard
 
 	public function getDOMElement():DOMElement
 	{
-		$dom = new DOMinstallment();
+		$dom = new DOMDocument();
 
 		$creditCard = $dom->createElement("creditCard");
 		$creditCard = $dom->appendChild($creditCard);

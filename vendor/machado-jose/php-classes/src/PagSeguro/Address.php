@@ -2,12 +2,17 @@
 
 namespace Ecommerce\PagSeguro;
 
+use Exception;
+use DOMDocument;
+use DOMElement;
+
 class Address
 {
 
 	private $street;
 	private $number;
 	private $district;
+	private $complement;
 	private $city;
 	private $state;
 	private $country;
@@ -16,6 +21,7 @@ class Address
 	public function __construct(string $street,
 		string $number,
 		string $district,
+		string $complement = 'Não informado',
 		string $city,
 		string $state,
 		string $country,
@@ -60,6 +66,7 @@ class Address
 		$this->street = $street;
 		$this->number = $number;
 		$this->district = $district;
+		$this->complement = $complement;
 		$this->city = $city;
 		$this->state = $state;
 		$this->country = $country;
@@ -79,6 +86,9 @@ class Address
 
 		$number = $dom->createElement("number", $this->number);
 		$number = $address->appendChild($number);
+
+		$complement = $dom->createElement("complement", $this->complement);
+		$complement = $address->appendChild($complement);
 
 		$district = $dom->createElement("district", $this->district);
 		$district = $address->appendChild($district);

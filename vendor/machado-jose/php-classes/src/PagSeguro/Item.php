@@ -2,6 +2,10 @@
 
 namespace Ecommerce\PagSeguro;
 
+use Exception;
+use DOMDocument;
+use DOMElement;
+
 class Item
 {
 	private $id;
@@ -48,7 +52,7 @@ class Item
 
 	public function getDOMElement():DOMElement
 	{
-		$dom = new DOMinstallment();
+		$dom = new DOMDocument();
 
 		$item = $dom->createElement("item");
 		$item = $dom->appendChild($item);

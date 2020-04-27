@@ -2,11 +2,16 @@
 
 namespace Ecommerce\PagSeguro;
 
+use Exception;
+use DOMDocument;
+use DOMElement;
+
 class Document
 {
 	private $type;
 	private $value;
 
+	const CPF = "CPF";
 
 	public function __construct(string $type, string $value)
 	{
@@ -20,7 +25,7 @@ class Document
 			
 			case Document::CPF:
 
-				if(!isValidCPF($value))
+				if(!Document::isValidCPF($value))
 				{
 					throw new Exception("CPF inválido");
 					
@@ -32,7 +37,7 @@ class Document
 		$this->value = $value;
 	}
 
-	public function isValidCPF($number):bollean
+	public static function isValidCPF($number):bool
 	{
 		$number = preg_replace('/[^0-9]/', '', (string) $number);
 

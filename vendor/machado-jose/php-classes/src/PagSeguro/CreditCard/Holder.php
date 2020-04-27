@@ -2,6 +2,13 @@
 
 namespace Ecommerce\PagSeguro\CreditCard;
 
+use Exception;
+use DOMDocument;
+use DOMElement;
+use DateTime;
+use \Ecommerce\PagSeguro\Phone;
+use \Ecommerce\PagSeguro\Document;
+
 class Holder
 {
 
@@ -38,15 +45,15 @@ class Holder
 		$name = $dom->createElement("name", $this->name);
 		$name = $holder->appendChild($name);
 
-		$birthDate = $dom->createElement("birthDate", $this->birthDate->format('d/m/Y'));
-		$birthDate= $holder->appendChild($birthDate);
-
 		$documents = $dom->createElement("documents");
 		$documents = $holder->appendChild($documents);
 
 		$document = $this->document->getDOMElement();
 		$document = $dom->importNode($document, true);
 		$document = $documents->appendChild($document);
+
+		$birthDate = $dom->createElement("birthDate", $this->birthDate->format('d/m/Y'));
+		$birthDate= $holder->appendChild($birthDate);
 
 		$phone = $this->phone->getDOMElement();
 		$phone = $dom->importNode($phone, true);

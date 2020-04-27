@@ -2,7 +2,7 @@
 
 namespace Ecommerce\PagSeguro\Method;
 
-class Address
+class Method
 {
 
 	const CREDIT_CARD = "creditCard";
