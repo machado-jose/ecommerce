@@ -8,6 +8,7 @@ use \Ecommerce\PagSeguro\Config;
 use \Ecommerce\PagSeguro\Transporter;
 use \Ecommerce\PagSeguro\Document;
 use \Ecommerce\PagSeguro\Phone;
+use \Ecommerce\PagSeguro\Bank;
 use \Ecommerce\PagSeguro\Address;
 use \Ecommerce\PagSeguro\Sender;
 use \Ecommerce\PagSeguro\Shipping;
@@ -30,6 +31,10 @@ $app->post('/payment/credit', function(){
 
 	$birthday = new DateTime($_POST['birth']);
 	$phone = new Phone($_POST['ddd'], $_POST['phone']);
+	//$bank será requisitado apenas na opção débito automático
+	//Para teste, estou definido um valor fixo
+	$bank = new Bank('itau');
+	//*****************************************************
 	$document = new Document(Document::CPF, $_POST['cpf']);
 	$shippingAddress = new Address(
 		$address->getdesaddress(),
@@ -90,14 +95,23 @@ $app->post('/payment/credit', function(){
 		$item = new Item(
 			(int)$product['idproduct'],
 			$product['desproduct'],
-			(float)$product['vlprice'],
-			(int)$product['nrtotal']
+			(int)$product['nrtotal'],
+			(float)$product['vlprice']
 		);
 
 		$payment->addItem($item);
 	}
 
+	//A opção selecionada foi creditCard para os testes
+	$payment->setCreditCard($creditCard);
+	//**************************************************
+
 	//Teste
+	/*$dom = new DOMDocument();
+	$test = $creditCard->getDOMElement();
+	$testNode = $dom->importNode($test, true);
+	$dom->appendChild($testNode);
+	echo $dom->saveXML();*/
 	$dom = $payment->getDOMDocument();
 	echo $dom->saveXML();
 });

@@ -23,6 +23,8 @@ class Config
 	const MAX_INSTALLMENT_NO_INTEREST = 6;
 	const MAX_INSTALLMENT = 10;
 
+	const NOTIFICATION_URL = "http://e-commerce.com.br/payment/notification";
+
 	public static function getAuthentication():array
 	{
 
