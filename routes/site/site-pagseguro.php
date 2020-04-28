@@ -18,6 +18,19 @@ use \Ecommerce\PagSeguro\Payment;
 use \Ecommerce\PagSeguro\CreditCard\Holder;
 use \Ecommerce\PagSeguro\CreditCard\Installment;
 
+$app->get('/payment/success', function(){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+	$order->getFromSession();
+
+	$page = new Page();
+	$page->setTpl('payment-success',[
+		"order"=> $order->getValues()
+	]);
+});
+
 $app->post('/payment/credit', function(){
 
 	User::verifyLogin(false);
