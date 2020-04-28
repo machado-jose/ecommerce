@@ -31,6 +31,19 @@ $app->get('/payment/success/boleto', function(){
 	]);
 });
 
+$app->get('/payment/success/debit', function(){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+	$order->getFromSession();
+
+	$page = new Page();
+	$page->setTpl('payment-success-debit',[
+		"order"=> $order->getValues()
+	]);
+});
+
 $app->post('/payment/boleto', function(){
 
 	User::verifyLogin(false);
@@ -206,6 +219,75 @@ $app->post('/payment/credit', function(){
 	Transporter::sendTransaction($payment);
 	echo json_encode(["success"=>true]);
 	
+});
+
+$app->post('/payment/debit', function(){
+
+	User::verifyLogin(false);
+
+	$order = new Order();
+	$order->getFromSession();
+	$order->get((int)$order->getidorder());
+
+	$address = $order->getAddress();
+	$cart = $order->getCart();
+
+	$birthday = new DateTime($_POST['birth']);
+
+	$phone = new Phone($_POST['ddd'], $_POST['phone']);
+
+	$document = new Document(Document::CPF, $_POST['cpf']);
+
+	$shippingAddress = new Address(
+		$address->getdesaddress(),
+		$address->getdesnumber(),
+		$address->getdesdistrict(),
+		$address->getdescomplement(),
+		$address->getdescity(),
+		$address->getdesstate(),
+		$address->getdescountry(),
+		$address->getdeszipcode()
+	);
+
+	$sender = new Sender(
+		$order->getdesperson(),
+		$order->getdesemail(),
+		$phone,
+		$document,
+		$_POST['hash']
+	);
+
+	$shipping = new Shipping(
+		$shippingAddress,
+		Shipping::PAC,
+		(float)$cart->getvlfreight()
+	);
+
+	$payment = new Payment(
+		$shipping,
+		(string)$order->getidorder(),
+		$sender
+	);
+
+	foreach ($cart->getProducts() as $product) {
+		
+		$item = new Item(
+			(int)$product['idproduct'],
+			$product['desproduct'],
+			(int)$product['nrtotal'],
+			(float)$product['vlprice']
+		);
+
+		$payment->addItem($item);
+	}
+
+	$bank = new Bank($_POST['bank']);
+
+	$payment->setBank($bank);
+
+	Transporter::sendTransaction($payment);
+	echo json_encode(["success"=>true]);
+
 });
 
 $app->get('/payment', function(){

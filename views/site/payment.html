@@ -441,6 +441,56 @@
             });
         });
 
+        var hashDebit = '';
+        $('#form-debit [name=cpf]').on('change', function(){
+            PagSeguroDirectPayment.onSenderHashReady(function(response){
+                if(response.status == 'error') {
+                    console.log(response.message);
+                    return false;
+                }
+                hashDebit = response.senderHash; //Hash estará disponível nesta variável.
+            });
+        });
+
+        $("#form-debit").on('submit', function(e){
+
+            e.preventDefault();
+
+            if(!isValidCPF($("#form-debit [name=cpf]").val())){
+                showError("O número do CPF não é válido.");
+                return false;
+            }
+
+            $("#form-debit [type=submit]").attr("disabled", "disabled");
+
+            var formDatas = $(this).serializeArray();
+            var params = {};
+
+            $.each(formDatas, function(index, field){
+                params[field.name] = field.value;
+            });
+
+            params.hash = hashDebit;
+
+            $.post(
+                "/payment/debit",
+                $.param(params),
+                function(r){
+
+                    var response = JSON.parse(r);
+                    if(response.success)
+                    {
+                        window.location.href = '/payment/success/debit';
+                    }
+                    else
+                    {
+                        showError("Não foi possível efetuar o pagamento.");
+                    }
+                }
+            );
+
+        });
+
         $("#form-boleto").on('submit', function(e){
 
             e.preventDefault();
