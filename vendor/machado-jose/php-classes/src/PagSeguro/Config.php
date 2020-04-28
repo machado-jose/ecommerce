@@ -23,6 +23,9 @@ class Config
 	const MAX_INSTALLMENT_NO_INTEREST = 6;
 	const MAX_INSTALLMENT = 10;
 
+	const SANDBOX_URL_TRANSACTION = "https://ws.sandbox.pagseguro.uol.com.br/v2/transactions";
+	const PRODUCTION_URL_TRANSACTION = "https://ws.pagseguro.uol.com.br/v2/transactions";
+
 	const NOTIFICATION_URL = "http://e-commerce.com.br/payment/notification";
 
 	public static function getAuthentication():array
@@ -53,6 +56,11 @@ class Config
 	public static function getUrlJS():string
 	{
 		return (Config::SANDBOX) ? Config::SANDBOX_URL_JS : Config::PRODUCTION_URL_JS;
+	}
+
+	public static function getUrlTransaction():string
+	{
+		return (Config::SANDBOX) ? Config::SANDBOX_URL_TRANSACTION : Config::PRODUCTION_URL_TRANSACTION;
 	}
 }
 

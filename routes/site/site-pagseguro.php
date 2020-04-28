@@ -105,15 +105,16 @@ $app->post('/payment/credit', function(){
 	//A opção selecionada foi creditCard para os testes
 	$payment->setCreditCard($creditCard);
 	//**************************************************
-
+	Transporter::sendTransaction($payment);
+	echo json_encode(["success"=>true]);
 	//Teste
 	/*$dom = new DOMDocument();
 	$test = $creditCard->getDOMElement();
 	$testNode = $dom->importNode($test, true);
 	$dom->appendChild($testNode);
 	echo $dom->saveXML();*/
-	$dom = $payment->getDOMDocument();
-	echo $dom->saveXML();
+	/*$dom = $payment->getDOMDocument();
+	echo $dom->saveXML();*/
 });
 
 $app->get('/payment', function(){

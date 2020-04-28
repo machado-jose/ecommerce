@@ -192,6 +192,38 @@ class Order extends Model{
 		return $address;
 	}
 
+	public function setPagseguroTransactionResponse(
+		string $descode,
+		float $vlgrossamount,
+		float $vldiscountamount,
+		float $vlfeeamount,
+		float $vlnetamount,
+		float $vlextraamount,
+		string $despaymentlink = ""
+	)
+	{
+		$sql = new Sql();
+		$sql->query("CALL sp_orderspagseguro_save(
+			:idorder,
+			:descode,
+			:vlgrossamount,
+			:vldiscountamount,
+			:vlfeeamount,
+			:vlnetamount,
+			:vlextraamount,
+			:despaymentlink
+		)",[
+			":idorder"=> $this->getidorder(),
+			":descode"=> $descode,
+			":vlgrossamount"=> $vlgrossamount,
+			":vldiscountamount"=> $vldiscountamount,
+			":vlfeeamount"=> $vlfeeamount,
+			":vlnetamount"=> $vlnetamount,
+			":vlextraamount"=> $vlextraamount,
+			":despaymentlink"=> $despaymentlink
+		]);
+	}
+
 }
 
 ?>
