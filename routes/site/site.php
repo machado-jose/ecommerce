@@ -3,6 +3,8 @@
 use \Ecommerce\Page;
 use \Ecommerce\Model\Product;
 use \Ecommerce\Model\User;
+use \Ecommerce\Model\Cart;
+use \Ecommerce\Model\Address;
 
 $app->get('/', function() {
     $products = Product::listAll();
@@ -23,19 +25,39 @@ $app->post('/login', function(){
 	try
 	{
 		User::loginToEmail($_POST['login'], $_POST['password']);
+		if(Cart::existsCart())
+		{
+			header("location: /cart");
+			exit;
+		}
+		else
+		{
+			header("location: /");
+			exit;
+		}
 	}
 	catch(\Exception $e)
 	{
 		User::setMsgError($e->getMessage(), User::SESSION_ERROR);
+		header("location: /login");
+		exit;
 	}
-	header("location: /cart");
-	exit;
 });
 
 $app->get('/logout', function(){
 	User::logout();
 	header("Location: /login");
 	exit;
+});
+
+$app->get('/error', function(){
+
+	$page = new Page();	
+	$page->setTpl('error', [
+		"errorCart"=> Cart::getMsgError(),
+		"errorAddress"=> Address::getMsgError()
+	]);
+
 });
 
 ?>

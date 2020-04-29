@@ -1,0 +1,17 @@
+<div class="container-fluid">
+	<div class="row">
+		<p>Error</p>
+	    {if="$errorCart != ''"}
+	    <div class="alert alert-danger scroll-menu-custom">
+	        <h1 class="text-center">Desculpe, ocorreu um problema.</h1>
+	        <h2 class="text-center">{$errorCart}</h2>
+	    </div>
+	    {/if}
+	    {if="$errorAddress != ''"}
+	    <div class="alert alert-danger scroll-menu-custom">
+	        <h1 class="text-center">Desculpe, ocorreu um problema.</h1>
+	        <h2 class="text-center">{$errorAddress}</h2>
+	    </div>
+	    {/if}
+	</div>
+</div>

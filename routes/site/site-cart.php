@@ -65,16 +65,10 @@ $app->post('/cart/freight', function(){
 	}
 	catch(\Exception $e)
 	{
-		header("Location: /cart/error");
+		Cart::setMsgError("Código ".$e->getCode().": ".$e->getMessage());
+		header("Location: /error");
 		exit;
 	}
-});
-
-$app->get('/cart/error', function(){
-
-	$page = new Page();	
-	$page->setTpl('error-500');
-
 });
 
 ?>

@@ -1,4 +1,12 @@
 <?php 
+/*
+	Códigos das Exceções:
+		Frete: 1000
+			length: 1001
+			weight: 1002
+			height: 1003
+			width: 1004
+*/
 
 namespace Ecommerce\Model;
 
@@ -66,6 +74,11 @@ class Cart extends Model
 		$sql = new Sql();
 		$results = $sql->select("SELECT * FROM tb_carts WHERE dessessionid = :dessessionid", [":dessessionid"=>session_id()]);
 		if(count($results) > 0) $this->setDatas($results[0]);
+	}
+
+	public static function existsCart():bool
+	{
+		return ($_SESSION[Cart::SESSION]["vltotal"] > 0);
 	}
 
 	public function get($idcart)
@@ -251,7 +264,7 @@ class Cart extends Model
 			$totals['vllength'] = Cart::LIMIT_MIN_LENGTH_FREIGHT;
 		}else if($totals['vllength'] > Cart::LIMIT_MAX_LENGTH_FREIGHT)
 		{
-			throw new Exception("Valor do Comprimento extrapolou do limite.");			
+			throw new \Exception("Valor do Comprimento extrapolou do limite.", 1001);			
 		}
 
 		if($totals['vlweight'] < Cart::LIMIT_MIN_WEIGHT_FREIGHT)
@@ -259,7 +272,7 @@ class Cart extends Model
 			$totals['vlweight'] = Cart::LIMIT_MIN_WEIGHT_FREIGHT;
 		}else if($totals['vlweight'] > Cart::LIMIT_MAX_WEIGHT_FREIGHT)
 		{
-			throw new Exception("Valor do Peso extrapolou do limite.");			
+			throw new \Exception("O Peso do produto extrapolou o limite.", 1002);			
 		}
 
 		if($totals['vlheight'] < Cart::LIMIT_MIN_HEIGHT_FREIGHT)
@@ -267,7 +280,7 @@ class Cart extends Model
 			$totals['vlheight'] = Cart::LIMIT_MIN_HEIGHT_FREIGHT;
 		}else if($totals['vlheight'] > Cart::LIMIT_MAX_HEIGHT_FREIGHT)
 		{
-			throw new Exception("Valor da Altura extrapolou do limite.");			
+			throw new \Exception("Valor da Altura extrapolou do limite.", 1003);			
 		}
 
 		if($totals['vlwidth'] < Cart::LIMIT_MIN_WIDTH_FREIGHT)
@@ -275,7 +288,7 @@ class Cart extends Model
 			$totals['vlwidth'] = Cart::LIMIT_MIN_WIDTH_FREIGHT;
 		}else if($totals['vlwidth'] > Cart::LIMIT_MAX_WIDTH_FREIGHT)
 		{
-			throw new Exception("Valor da Largura extrapolou do limite.");			
+			throw new \Exception("Valor da Largura extrapolou do limite.", 1004);			
 		}
 
 		return $totals;

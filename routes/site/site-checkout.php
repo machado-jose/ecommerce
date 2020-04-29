@@ -37,7 +37,8 @@ $app->get('/checkout', function(){
 	}
 	catch(\Exception $e)
 	{
-		header("Location: /cart/error");
+		Address::setMsgError("Código ".$e->getCode().": ".$e->getMessage());
+		header("Location: /error");
 		exit;
 	}
 });

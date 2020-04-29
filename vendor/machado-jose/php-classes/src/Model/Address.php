@@ -6,6 +6,8 @@ use \Ecommerce\DB\Sql;
 use \Ecommerce\Model\Model;
 
 class Address extends Model{
+
+	const SESSION_ERROR = "AddressError";
 	
 	public static function getCep($nrcep)
 	{
@@ -121,6 +123,23 @@ class Address extends Model{
 		{
 			return false;
 		}
+	}
+
+	public static function setMsgError($msg)
+	{
+		$_SESSION[Address::SESSION_ERROR] = $msg;
+	}
+
+	public static function getMsgError()
+	{
+		$msg = (isset($_SESSION[Address::SESSION_ERROR])) ? $_SESSION[Address::SESSION_ERROR] : '';
+		Address::clearMsgError();
+		return $msg;
+	}
+
+	public static function clearMsgError()
+	{
+		$_SESSION[Address::SESSION_ERROR] = NULL;
 	}
 
 }
