@@ -6,13 +6,23 @@ use \Ecommerce\Model\Cart;
 use \Ecommerce\Model\User;
 
 $app->get('/cart', function(){
-	$cart = Cart::getFromSession();
-	$page = new Page();	
-	$page->setTpl('cart', array(
-		"cart"=> $cart->getValues(),
-		"products"=> $cart->getProducts(),
-		"error"=> Cart::getMsgError(User::SESSION_ERROR)
-	));
+	try
+	{
+		$cart = Cart::getFromSession();
+		$page = new Page();	
+		$page->setTpl('cart', array(
+			"cart"=> $cart->getValues(),
+			"products"=> $cart->getProducts(),
+			"error"=> Cart::getMsgError(User::SESSION_ERROR)
+		));
+	}
+	catch(\Exception $e)
+	{
+		Cart::setMsgError("Código ".$e->getCode().": ".$e->getMessage());
+		header("Location: /error");
+		exit;
+	}
+	
 });
 
 $app->get('/cart/:idproduct/add', function($idproduct){
@@ -59,7 +69,7 @@ $app->post('/cart/freight', function(){
 	try
 	{
 		$cart = Cart::getFromSession();
-		$cart->setFreight($_POST['zipcode']);
+		$cart->setFreight($_POST['zipcode'], $_POST["typeFreight"]);
 		header("Location: /cart");
 		exit;
 	}

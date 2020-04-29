@@ -80,6 +80,36 @@
                                     <div class="coupon">
                                         <label for="cep">CEP:</label>
                                         <input type="text" placeholder="00000-000" value="{$cart.deszipcode}" id="cep" name="zipcode" class="input-text">
+                                        <div>
+                                            <h4>Selecione uma das opções de frete:</h4>
+                                            {if="$cart.typefreight == 'sedex'"}
+                                            <label for="sedex">
+                                                <input type="radio" name="typeFreight" value="sedex" id="sedex" checked>Sedex
+                                            </label>
+                                            {else}
+                                            <label for="sedex">
+                                                <input type="radio" name="typeFreight" value="sedex" id="sedex" checked>Sedex
+                                            </label>
+                                            {/if}
+                                            {if="$cart.typefreight == 'sedex10'"}
+                                            <label for="sedex10">
+                                                <input type="radio" name="typeFreight" value="sedex10" id="sedex10" checked>Sedex 10
+                                            </label>
+                                            {else}
+                                            <label for="sedex10">
+                                                <input type="radio" name="typeFreight" value="sedex10" id="sedex10">Sedex 10
+                                            </label>
+                                            {/if}
+                                            {if="$cart.typefreight == 'sedexPac'"}
+                                            <label for="sedexPac">
+                                                <input type="radio" name="typeFreight" value="sedexPac" id="sedexPac" checked>Sedex PAC
+                                            </label>
+                                            {else}
+                                            <label for="sedexPac">
+                                                <input type="radio" name="typeFreight" value="sedexPac" id="sedexPac">Sedex PAC
+                                            </label>
+                                            {/if}
+                                        </div>
                                         <input type="submit" formmethod="post" formaction="/cart/freight" value="CALCULAR" class="button">
                                     </div>
 

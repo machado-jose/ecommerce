@@ -6,6 +6,7 @@
 			weight: 1002
 			height: 1003
 			width: 1004
+			typeFreight: 1005
 */
 
 namespace Ecommerce\Model;
@@ -14,12 +15,14 @@ use \Ecommerce\DB\Sql;
 use \Ecommerce\Model\Model;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Product;
+use \Exception;
 
 class Cart extends Model
 {
 
 	const SESSION = "Cart";
 	const SESSION_ERROR = "CartError";
+
 	const LIMIT_MIN_WEIGHT_FREIGHT = 0.3;
 	const LIMIT_MAX_WEIGHT_FREIGHT = 30;
 	const LIMIT_MIN_WIDTH_FREIGHT = 11;
@@ -28,6 +31,10 @@ class Cart extends Model
 	const LIMIT_MAX_HEIGHT_FREIGHT = 105;
 	const LIMIT_MIN_LENGTH_FREIGHT = 16;
 	const LIMIT_MAX_LENGTH_FREIGHT = 105;
+
+	const COD_SEDEX = "04014";
+	const COD_SEDEX_10 = "04790";
+	const COD_SEDEX_PAC = "04510";
 
 	public static function getFromSession()
 	{
@@ -98,14 +105,16 @@ class Cart extends Model
 			:iduser,
 			:deszipcode,
 			:vlfreight,
-			:nrday
+			:nrday,
+			:typefreight
 		)", array(
 			":idcart"=> $this->getidcart(),
 			":dessessionid"=> $this->getdessessionid(),
 			":iduser"=> $this->getiduser(),
 			":deszipcode"=> $this->getdeszipcode(),
 			":vlfreight"=> $this->getvlfreight(),
-			":nrday"=> $this->getnrday()
+			":nrday"=> $this->getnrday(),
+			":typefreight"=> $this->gettypefreight()
 		));
 
 		$this->setDatas($results[0]);
@@ -184,17 +193,37 @@ class Cart extends Model
 
 	}
 
-	public function setFreight($nrzipcode)
+	public function setFreight($nrzipcode, string $typeFreight)
 	{
 		$nrzipcode = str_replace('-', '', $nrzipcode);
 		$totals = $this->getProductsTotal();
 		if(count($totals) > 0)
 		{
 			$totals = $this->checkValuesFreight($totals);
+
+			$codFreight = '';
+			switch ($typeFreight) {
+				case 'sedex':
+					$codFreight = Cart::COD_SEDEX;
+					break;
+
+				case("sedex10"):
+					$codFreight = Cart::COD_SEDEX_10;
+				break;
+
+				case("sedexPac"):
+					$codFreight = Cart::COD_SEDEX_PAC;
+				break;
+				
+				default:
+					throw new Exception("Tipo de frete inválido.", 1005);	
+					break;
+			}
+
 			$qs = http_build_query([
 				"nCdEmpresa"=> '',
 				"sDsSenha"=> '',
-				"nCdServico"=> '04510',
+				"nCdServico"=> $codFreight,
 				"sCepOrigem"=> '08226021',
 				"sCepDestino"=> $nrzipcode,
 				"nVlPeso"=> $totals['vlweight'],
@@ -211,20 +240,19 @@ class Cart extends Model
 		
 			$xml = simplexml_load_file('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?'.$qs);
 
-			
-
 			$result = $xml->Servicos->cServico;
 
 			if($result->MsgErro != ''){
 				Cart::setMsgError($result->MsgErro);
 			}else{
 				Cart::clearMsgError();
-			} 
+			}
 
 			$prazo = (array)$result->PrazoEntrega;
 			$this->setnrdays($prazo[0]);
 			$this->setvlfreight(Cart::formatValueToDecimal($result->Valor));
 			$this->setdeszipcode($nrzipcode);
+			$this->settypefreight($typeFreight);
 			$this->save();
 			return true;
 		}
@@ -299,7 +327,7 @@ class Cart extends Model
 	{
 		if($this->getdeszipcode() != '')
 		{
-			return $this->setFreight($this->getdeszipcode());
+			return $this->setFreight($this->getdeszipcode(), $this->gettypefreight());
 		}
 	}
 	public function getValues()

@@ -85,6 +85,45 @@
                                     <div class="coupon">
                                         <label for="cep">CEP:</label>
                                         <input type="text" placeholder="00000-000" value="<?php echo htmlspecialchars( $cart["deszipcode"], ENT_COMPAT, 'UTF-8', FALSE ); ?>" id="cep" name="zipcode" class="input-text">
+                                        <div>
+                                            <h4>Selecione uma das opções de frete:</h4>
+                                            <?php if( $cart["typefreight"] == 'sedex' ){ ?>
+
+                                            <label for="sedex">
+                                                <input type="radio" name="typeFreight" value="sedex" id="sedex" checked>Sedex
+                                            </label>
+                                            <?php }else{ ?>
+
+                                            <label for="sedex">
+                                                <input type="radio" name="typeFreight" value="sedex" id="sedex" checked>Sedex
+                                            </label>
+                                            <?php } ?>
+
+                                            <?php if( $cart["typefreight"] == 'sedex10' ){ ?>
+
+                                            <label for="sedex10">
+                                                <input type="radio" name="typeFreight" value="sedex10" id="sedex10" checked>Sedex 10
+                                            </label>
+                                            <?php }else{ ?>
+
+                                            <label for="sedex10">
+                                                <input type="radio" name="typeFreight" value="sedex10" id="sedex10">Sedex 10
+                                            </label>
+                                            <?php } ?>
+
+                                            <?php if( $cart["typefreight"] == 'sedexPac' ){ ?>
+
+                                            <label for="sedexPac">
+                                                <input type="radio" name="typeFreight" value="sedexPac" id="sedexPac" checked>Sedex PAC
+                                            </label>
+                                            <?php }else{ ?>
+
+                                            <label for="sedexPac">
+                                                <input type="radio" name="typeFreight" value="sedexPac" id="sedexPac">Sedex PAC
+                                            </label>
+                                            <?php } ?>
+
+                                        </div>
                                         <input type="submit" formmethod="post" formaction="/cart/freight" value="CALCULAR" class="button">
                                     </div>
 
