@@ -11,27 +11,35 @@ $app->get('/checkout', function(){
 
 	User::verifyLogin(false);
 
-	$address = new Address();
-	$cart = Cart::getFromSession();
-	
-	if(!(bool)$cart->getdeszipcode())
+	try
 	{
-		$user = User::getFromSession();
-		$address->getFromPerson($user->getidperson());
-		$cart->setdeszipcode($address->getdeszipcode());
-	}
-	else
-	{
-		$address->loadFromCep($cart->getdeszipcode());
-	}
+		$address = new Address();
+		$cart = Cart::getFromSession();
+		
+		if(!(bool)$cart->getdeszipcode())
+		{
+			$user = User::getFromSession();
+			$address->getFromPerson($user->getidperson());
+			$cart->setdeszipcode($address->getdeszipcode());
+		}
+		else
+		{
+			$address->loadFromCep($cart->getdeszipcode());
+		}
 
-	$page = new Page();
-	$page->setTpl('checkout', array(
-		"cart"=> $cart->getValues(),
-		"address"=> $address->getValues(),
-		"products"=> $cart->getProducts(),
-		"error"=> User::getMsgError(User::SESSION_REGISTER_ERROR)
-	));
+		$page = new Page();
+		$page->setTpl('checkout', array(
+			"cart"=> $cart->getValues(),
+			"address"=> $address->getValues(),
+			"products"=> $cart->getProducts(),
+			"error"=> User::getMsgError(User::SESSION_REGISTER_ERROR)
+		));
+	}
+	catch(\Exception $e)
+	{
+		header("Location: /cart/error");
+		exit;
+	}
 });
 
 $app->post('/checkout/change-cep', function(){

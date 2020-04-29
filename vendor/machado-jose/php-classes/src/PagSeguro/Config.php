@@ -28,6 +28,9 @@ class Config
 
 	const NOTIFICATION_URL = "http://e-commerce.com.br/payment/notification";
 
+	const SANDBOX_URL_NOTIFICATION = "https://ws.pagseguro.uol.com.br/v3/transactions/notifications/";
+	const PRODUCTION_URL_NOTIFICATION = "https://ws.pagseguro.uol.com.br/v3/transactions/notifications/";
+
 	public static function getAuthentication():array
 	{
 
@@ -61,6 +64,11 @@ class Config
 	public static function getUrlTransaction():string
 	{
 		return (Config::SANDBOX) ? Config::SANDBOX_URL_TRANSACTION : Config::PRODUCTION_URL_TRANSACTION;
+	}
+
+	public static function getUrlNotification():string
+	{
+		return (Config::SANDBOX) ? Config::SANDBOX_URL_NOTIFICATION : Config::PRODUCTION_URL_NOTIFICATION;
 	}
 }
 

@@ -22,7 +22,7 @@ class Transporter
 	public static function sendTransaction(Payment $payment)
 	{
 		$client = new Client();
-
+		
 		$res = $client->request('POST', Config::getUrlTransaction().'?'.http_build_query(Config::getAuthentication()), [
 			"verify"=>false,
 			"headers"=> [
@@ -46,6 +46,30 @@ class Transporter
 		);
 
 		return $xml;
+	}
+
+	public static function getNotification(string $code, string $type)
+	{
+
+		switch ($type) {
+			case 'transaction':
+				$url = Config::getUrlNotification();
+				break;
+			
+			default:
+				throw new Exception("Notificação Inválida");	
+				break;
+		}
+
+		$client = new Client();
+
+		$res = $client->request('GET', $url. $code.'?'.http_build_query(Config::getAuthentication()), [
+			"verify"=>false
+		]);
+
+		$xml = simplexml_load_string($res->getBody()->getContents());
+		var_dump($xml);
+		exit;
 	}
 
 }

@@ -18,12 +18,20 @@ use \Ecommerce\PagSeguro\Payment;
 use \Ecommerce\PagSeguro\CreditCard\Holder;
 use \Ecommerce\PagSeguro\CreditCard\Installment;
 
+$app->post('/payment/notification', function(){
+
+	Transporter::getNotification($_POST['notificationCode'], $_POST['notificationType']);
+});
+
 $app->get('/payment/success/boleto', function(){
 
 	User::verifyLogin(false);
 
 	$order = new Order();
 	$order->getFromSession();
+
+	session_regenerate_id();
+	Cart::destroySession();
 
 	$page = new Page();
 	$page->setTpl('payment-success-boleto',[
@@ -37,6 +45,9 @@ $app->get('/payment/success/debit', function(){
 
 	$order = new Order();
 	$order->getFromSession();
+
+	session_regenerate_id();
+	Cart::destroySession();
 
 	$page = new Page();
 	$page->setTpl('payment-success-debit',[
@@ -117,6 +128,9 @@ $app->get('/payment/success', function(){
 
 	$order = new Order();
 	$order->getFromSession();
+
+	session_regenerate_id();
+	Cart::destroySession();
 
 	$page = new Page();
 	$page->setTpl('payment-success',[
@@ -294,27 +308,35 @@ $app->get('/payment', function(){
 
 	User::verifyLogin(false);
 
-	$order = new Order();
-	$order->getFromSession();
-
-	$years = [];
-	for($y = date('Y'); $y < date('Y') + 14; $y++)
+	try
 	{
-		array_push($years, $y);
-	}
+		$order = new Order();
+		$order->getFromSession();
 
-	$page = new Page();
-	$page->setTpl('payment',[
-		"order"=> $order->getValues(),
-		"msgError"=> Order::getMsgError(),
-		"years"=> $years,
-		"pagseguro"=> [
-			"urlJS"=> Config::getUrlJS(),
-			"id"=>  Transporter::createSession(),
-			"maxInstallmentNoInterest"=> Config::MAX_INSTALLMENT_NO_INTEREST,
-			"maxInstallment"=> Config::MAX_INSTALLMENT
-		]
-	]);
+		$years = [];
+		for($y = date('Y'); $y < date('Y') + 14; $y++)
+		{
+			array_push($years, $y);
+		}
+
+		$page = new Page();
+		$page->setTpl('payment',[
+			"order"=> $order->getValues(),
+			"msgError"=> Order::getMsgError(),
+			"years"=> $years,
+			"pagseguro"=> [
+				"urlJS"=> Config::getUrlJS(),
+				"id"=>  Transporter::createSession(),
+				"maxInstallmentNoInterest"=> Config::MAX_INSTALLMENT_NO_INTEREST,
+				"maxInstallment"=> Config::MAX_INSTALLMENT
+			]
+		]);
+	}
+	catch(\Exception $e)
+	{
+		header("Location: /cart/error");
+		exit;
+	}
 
 });
 
