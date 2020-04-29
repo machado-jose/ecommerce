@@ -28,7 +28,7 @@ class Config
 
 	const NOTIFICATION_URL = "http://e-commerce.com.br/payment/notification";
 
-	const SANDBOX_URL_NOTIFICATION = "https://ws.pagseguro.uol.com.br/v3/transactions/notifications/";
+	const SANDBOX_URL_NOTIFICATION = "https://ws.sandbox.pagseguro.uol.com.br/v3/transactions/notifications/";
 	const PRODUCTION_URL_NOTIFICATION = "https://ws.pagseguro.uol.com.br/v3/transactions/notifications/";
 
 	public static function getAuthentication():array

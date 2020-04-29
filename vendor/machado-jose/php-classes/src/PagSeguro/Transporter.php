@@ -68,8 +68,27 @@ class Transporter
 		]);
 
 		$xml = simplexml_load_string($res->getBody()->getContents());
-		var_dump($xml);
-		exit;
+		
+		$order = new Order();
+		$order->get((int)$xml->reference);
+		if($order->getidstatus() !== (int)$xml->status)
+		{
+			$order->setidstatus((int)$xml->status);
+			$order->updateStatus();
+		}
+
+		//Creating logs files
+		$filename = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR.
+		"res" . DIRECTORY_SEPARATOR . "logs" . DIRECTORY_SEPARATOR .
+		date("YmdHis") . "json";
+		$file = fopen($filename, "a+");
+		fwrite($file, json_encode([
+			"post"=> $_POST,
+			"xml"=> $xml
+		]));
+		fclose($file);
+
+		return $xml;
 	}
 
 }
