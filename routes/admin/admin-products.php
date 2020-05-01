@@ -4,6 +4,15 @@ use \Ecommerce\PageAdmin;
 use \Ecommerce\Model\User;
 use \Ecommerce\Model\Product;
 
+$app->get('/admin/products/:idproduct/delete', function($idproduct){
+	User::verifyLogin();
+	$product = new Product();
+	$product->get((int)$idproduct);
+	$product->delete();
+	header("Location: /admin/products");
+	exit;
+});
+
 $app->get('/admin/products', function(){
 
 	User::verifyLogin();
@@ -55,16 +64,6 @@ $app->post('/admin/products/create', function(){
 	$product->setDatas($_POST);
 	$product->save();
 	$product->saveDescription($_POST['description']);
-	header("Location: /admin/products");
-	exit;
-});
-
-$app->get('/admin/products/:idproduct/delete', function($idproduct){
-	User::verifyLogin();
-	$product = new Product();
-	$product->get((int)$idproduct);
-	$product->deleteDescription();
-	$product->delete();
 	header("Location: /admin/products");
 	exit;
 });

@@ -63,9 +63,10 @@ class Product extends Model
 	public function delete()
 	{
 		$sql = new Sql();
-		$sql->query("DELETE FROM tb_products WHERE idproduct = :idproduct", array(
+		$sql->query("UPDATE tb_products SET salestatus = 0 WHERE idproduct = :idproduct", array(
 			":idproduct"=> $this->getidproduct()
 		));
+		$this->deleteDescription();
 	}
 
 	private function checkPhoto()
@@ -137,7 +138,8 @@ class Product extends Model
 		$start = ($page - 1) * $itemsPerPage;
 
 		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
-			FROM tb_products 
+			FROM tb_products
+			WHERE salestatus = 1
 			ORDER BY desproduct
 			LIMIT $start, $itemsPerPage");
 
@@ -158,7 +160,7 @@ class Product extends Model
 
 		$results = $sql->select("SELECT SQL_CALC_FOUND_ROWS *
 			FROM tb_products
-			WHERE desproduct LIKE :search
+			WHERE desproduct LIKE :search AND salestatus = 1
 			ORDER BY desproduct
 			LIMIT $start, $itemsPerPage", [
 				":search"=> '%'.$search.'%'
@@ -224,7 +226,7 @@ class Product extends Model
 			'products-description' . DIRECTORY_SEPARATOR .
 			$this->getidproduct() . '.html';
 
-		unlink($filename);
+		if(file_exists($filename)) unlink($filename);
 	}
 
 }
