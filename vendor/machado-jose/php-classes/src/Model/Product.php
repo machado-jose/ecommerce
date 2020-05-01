@@ -29,6 +29,14 @@ class Product extends Model
 	{
 		$sql = new Sql();
 
+		$sameProducts = $sql->select("SELECT * FROM tb_products
+			WHERE desproduct = :desproduct OR desurl = :desurl", [
+				":desproduct"=> $this->getdesproduct(),
+				":desurl"=> $this->getdesurl()
+		]);
+
+		if(count($sameProducts) > 0) return false;
+
 		// Obs.: Observar o número de bytes que as variáveis da procedure são capazes de armazenar
 		$results = $sql->select("CALL sp_products_save(
 			:pidproduct,
@@ -51,6 +59,46 @@ class Product extends Model
 		));
 
 		$this->setDatas($results[0]);
+		$this->saveDescription($_POST['description']);
+		return true;
+	}
+
+	public function update()
+	{
+		$sql = new Sql();
+
+		$sameProducts = $sql->select("SELECT * FROM tb_products
+			WHERE (desproduct = :desproduct OR desurl = :desurl) AND idproduct <> :idproduct", [
+				":desproduct"=> $this->getdesproduct(),
+				":desurl"=> $this->getdesurl(),
+				":idproduct"=> $this->getidproduct()
+		]);
+
+		if(count($sameProducts) > 0) return false;
+		// Obs.: Observar o número de bytes que as variáveis da procedure são capazes de armazenar
+		$results = $sql->select("CALL sp_products_save(
+			:pidproduct,
+			:pdesproduct,
+			:pvlprice,
+			:pvlwidth,
+			:pvlheight,
+			:pvllength,
+			:pvlweight,
+			:pdesurl
+		)", array(
+			":pidproduct"=> $this->getidproduct(),
+			":pdesproduct"=> $this->getdesproduct(),
+			":pvlprice"=> $this->getvlprice(),
+			":pvlwidth"=> $this->getvlwidth(),
+			":pvlheight"=> $this->getvlheight(),
+			":pvllength"=> $this->getvllength(),
+			":pvlweight"=> $this->getvlweight(),
+			":pdesurl"=> $this->getdesurl()
+		));
+
+		$this->setDatas($results[0]);
+		$this->saveDescription($_POST['description']);
+		return true;
 	}
 
 	public function get($idproduct)

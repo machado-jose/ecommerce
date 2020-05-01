@@ -49,6 +49,10 @@
               <textarea class="form-control rounded-0" id="description" name="description" rows="10"><?php echo htmlspecialchars( $product["description"], ENT_COMPAT, 'UTF-8', FALSE ); ?></textarea>
             </div>
             <div class="form-group">
+              <label for="desurl">URL do produto</label>
+              <input type="text" class="form-control" id="desurl" name="desurl" placeholder="Digite a URL do produto" value="<?php echo htmlspecialchars( $product["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
+            </div>
+            <div class="form-group">
               <label for="file">Foto</label>
               <input type="file" class="form-control" id="file" name="file" value="<?php echo htmlspecialchars( $product["vlweight"], ENT_COMPAT, 'UTF-8', FALSE ); ?>">
               <div class="box box-widget">
