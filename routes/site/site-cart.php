@@ -13,7 +13,7 @@ $app->get('/cart', function(){
 		$page->setTpl('cart', array(
 			"cart"=> $cart->getValues(),
 			"products"=> $cart->getProducts(),
-			"error"=> Cart::getMsgError(User::SESSION_ERROR)
+			"error"=> Cart::getMsgError()
 		));
 	}
 	catch(\Exception $e)

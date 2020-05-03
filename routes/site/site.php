@@ -25,6 +25,7 @@ $app->post('/login', function(){
 	try
 	{
 		User::loginToEmail($_POST['login'], $_POST['password']);
+		
 		if(Cart::existsCart())
 		{
 			header("location: /cart");

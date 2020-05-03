@@ -6,10 +6,10 @@ class Config
 {
 	const SANDBOX = true;
 
-	const SANDBOX_EMAIL = "*";
+	const SANDBOX_EMAIL = "machado.josegustavo@gmail.com";
 	const PRODUCTION_EMAIL = "*";
 
-	const SANDBOX_TOKEN = "*";
+	const SANDBOX_TOKEN = "ECCBE2238DED490ABDFC04556333EFB5";
 	// ****** This token is private ******
 	const PRODUCTION_TOKEN = "*";
 

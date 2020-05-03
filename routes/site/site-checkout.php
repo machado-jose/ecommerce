@@ -67,8 +67,8 @@ $app->post('/checkout', function(){
 
 	if(!isset($_POST['zipcode']) || $_POST['zipcode'] === '')
 	{
-		User::setMsgError("Informe o CEP.", User::SESSION_REGISTER_ERROR);
-		header("Location: /checkout");
+		Cart::setMsgError('Para finalizar a compra, é necessário o cálculo do frete.');
+		header("Location: /cart");
 		exit;
 	}
 

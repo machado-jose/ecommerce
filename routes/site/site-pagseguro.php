@@ -334,7 +334,7 @@ $app->get('/payment', function(){
 	}
 	catch(\Exception $e)
 	{
-		header("Location: /cart/error");
+		header("Location: /error");
 		exit;
 	}
 

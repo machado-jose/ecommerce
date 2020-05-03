@@ -85,7 +85,14 @@ class Cart extends Model
 
 	public static function existsCart():bool
 	{
-		return ($_SESSION[Cart::SESSION]["vltotal"] > 0);
+		$sql = new Sql();
+		$results = $sql->select("SELECT * 
+			FROM tb_cartsproducts
+			INNER JOIN tb_carts USING(idcart)
+			WHERE idcart = :idcart", [
+				":idcart"=> $_SESSION[Cart::SESSION]["idcart"]
+			]);
+		return (count($results) > 0);
 	}
 
 	public function get($idcart)
