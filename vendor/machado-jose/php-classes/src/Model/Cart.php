@@ -83,7 +83,7 @@ class Cart extends Model
 		if(count($results) > 0) $this->setDatas($results[0]);
 	}
 
-	public static function existsCart():bool
+	public static function existsProductsInCart():bool
 	{
 		$sql = new Sql();
 		$results = $sql->select("SELECT * 

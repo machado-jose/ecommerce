@@ -64,6 +64,13 @@ $app->post('/checkout', function(){
 	
 	$address = new Address();
 	$user = User::getFromSession();
+	
+	if(!Cart::existsProductsInCart())
+	{
+		Cart::setMsgError('É necessário ter algum produto no carrinho para finalizar a compra.');
+		header("Location: /cart");
+		exit;
+	}
 
 	if(!isset($_POST['zipcode']) || $_POST['zipcode'] === '')
 	{
